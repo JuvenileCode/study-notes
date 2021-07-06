@@ -17,3 +17,5 @@
 
 ### [linux](https://github.com/JuvenileCode/study-notes/tree/master/linux)
 
+### [mybatis](https://github.com/JuvenileCode/study-notes/tree/master/mybatis)
+

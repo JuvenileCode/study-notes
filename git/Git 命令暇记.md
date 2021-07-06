@@ -47,3 +47,9 @@ git pull --rebase origin master
 
 
 
+## 问题
+
+### Mac Iterm2 Git Status 中文乱码
+
+**core.quotepath没有设置好** : `git config --global core.quotepath false`
+
