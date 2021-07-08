@@ -19,5 +19,9 @@
 >
 > tar -zxvf XX.tar.gz
 >
-> 
 
+### nohup.out文件清理 
+
+> cp /dev/null nohup.out   **//:** 程序在运行清理后，只要有输入会还原，但程序停止清理有效
+>
+> nohup java -jar /xxx/xxx/xxx.jar >> start.log &  **//:** 用cp /dev/null >start.log 置空
