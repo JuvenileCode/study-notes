@@ -1,6 +1,4 @@
-
-
-## Html 重修暇记
+## Html 复习暇记
 
 ### HTML
 
@@ -101,15 +99,36 @@ web标准主要位`结构`，`表现`，`行为` ；提倡分离，简单来说�
 </dl>
 ```
 
-#### 表单
+#### 表单元素
 
 ```html
 <!--表单由 表单域<form>、表单控件、提示信息3个部分组成-->
-<form>
+<form action="" method="get || post">
 </form>
 <!-- 1.input 输入表单元素-->
-<input type="text || password "/>
+<input name="" type="text || password " value=""/>
+<!-- 2.单选radio、多选checkbox-->
+<input name="" type="radio" value=""/>
+<input name="" type="checkbox" value=""/>
+<!-- 3.表单提交、重置-->
+<input type="submit" value="提交"/>  <input type="reset" value="清除"/>
+<!-- 4.普通按钮、文件域-->
+<input type="button" value="按钮" /> <input type="file" />
+<!-- 5.label标签绑定表单元素(id和for值要一样)，自动追焦 -->
+<label for="name">man</label>
+<input type="text" name="name" id="name"/>
+<!-- 6.select下拉元素 -->
+<select id="">
+  <option value="" select></option>
+</select>
+<!-- 7. textarea文本域 -->
+<textarea rows="" cols="">
+</textarea>
 ```
+
+
+
+
 
 
 
