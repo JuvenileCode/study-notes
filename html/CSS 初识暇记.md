@@ -1,6 +1,6 @@
-## CSS 暇记
+## CSS 初识暇记
 
-[CSS参考手册在线查询](https://css.doyoe.com/)
+[CSS参考手册在线查询](https://www.xp.cn/css3/)
 
 ### 初识
 
@@ -107,7 +107,7 @@
     <li>ul-one</li>
 </ul>
 
-<!-- 2. 子选择器: 只选择某元素最近一级子元素；元素用>隔开； -->
+<!-- 2. 子选择器: 只选择某元素最近一级子元素；元素用（>）隔开； -->
 <style>
   div>a {
     text-decoration: none;
@@ -120,6 +120,29 @@
         <a href="#">链接</a>
     </p>
 </div>
+
+<!-- 3.并集选择器：为多组标签定义相同的样式；元素用（,)隔开 -->
+<style>
+  #bj-div,#bj-p {
+    color: #52c41a;
+    text-shadow:1px 1px 1px rgba(0,0,0,.3);
+  }
+</style>
+<div id="bj-div">AA</div>
+<p id="bj-p">BB</p>
+<span>CC</span>
+<ul>
+    <li>DD</li>
+</ul>
+
+<!-- 4.伪类选择器： 用于某些标签添加特殊效果；用冒号（：）隔开-->
+<style>
+/*链接伪类选择器*/
+  a:link{选择所有未被访问的链接}
+  a:visited{选择所有已被访问链接}
+/*focus伪类选择器*/
+  input:focus{background-color: yellow;}
+</style>
 ```
 
 ### CSS字体属性
@@ -152,6 +175,8 @@
     text-indent: 20px || 4em;
     /* 上间距-文本高度-下间距组成：比如文字16px,那么上下间距为5px*/
     text-height: 26px;
+    /* 文本居中 line-height == height 值文字就居中 */
+    line-height: 30px;
   }
 </style>
 ```
@@ -202,5 +227,113 @@
 >
 > - 简写按tab键生成
 
+### CSS元素显示模式
 
+**元素（标签）以什么方式进行显示；比如<div>占一行、一行可以放多个<span>。HTML元素一般分为`块元素`和`行内元素`**
 
+**块元素：**
+
+- 常见有<H1>~<H6>、<p>、<div>; <div>最典型块元素
+- 独占一行；高、宽及内外边距都可以控制
+- 宽度默认是容器（父级宽度）的100%
+- 是一个容器盒子，里面可以放行内或者块级元素
+
+**行元素：**
+
+- 常见有<a>、<span>等
+- 相邻元素在一行上，一行可以放多个；不能设置高度和宽度
+- 行内元素只能容纳文本或其它行内元素（链接不能放链接，但<a>可以转换块级模式）
+
+**行内块元素：**
+
+- 同时具有块元素和行元素特别，比如<img/>、<input/>、<td/>
+- 一行显示多个（有空白间隙），可以设置高、宽及内外边距
+
+**元素显示模式转换：**
+
+一个模式元素需要另外一种模式的特性；比如想要增加<a>的触发范围：
+
+```html
+<style>
+  /* 行内元素转换块级元素（block）*/
+  a {
+    width:30px;
+    height:40px;
+    display: block;
+  }
+  /* 块级元素转行内元素（inline） 或 行内块元素（inline-bolock）*/
+  div {
+    width:100px;
+    height:120px;
+    display: inline;
+ 		display: inline-bolock;
+</style>
+<a href="#">增大链接选择范围</a>
+<div> 1 </div> <div> 2 </div>
+```
+
+### CSS的背景
+
+```html
+<style>
+  .div { 
+    /* 1.定义背景颜色 */
+    background-color: green;
+    /* 2.定义背景图片：便于控制位置*/
+    background-image: url(image/img.png);
+    /* 3.背景图片平铺属性：非平铺 */
+    background-repeat: no-repeat; 
+    /* 4.背景图片位置：（x y)可以是方位或数值 */   
+		background-position: center top;
+    background-position: 30px 20px;
+    background-position: 15px center;
+    /* 5.背景图片固定： */
+    background-attachment: fixed || scroll;
+    /* 合并写法*/
+    background: green url(img.png) no-repeat fixed 15px center;
+    /* 6. 盒子透明设置 */
+    background: rgba(0,0,0,0.3);
+  }
+```
+
+### CSS三大特性
+
+**层叠性：**
+
+相同选择器给设置相同的样式，此时一个样式机会`覆盖（层叠）`另一个`冲突（就近原则）`的样式
+
+**继承性：**
+
+子标签继承父标签某些（文本、色号等）样式，比如 div>p ,div样式修改会影响p标签
+
+**优先级：**
+
+选择器相同，按层叠性执行
+
+选择器不同，根据选择器权重
+
+- 继承或者*  0,0,0,0
+- 元素选择器 0,0,0,1
+- 类选择器、伪类选择器 0,0,1,0
+- ID选择器 0,1,0,0
+- 行内样式 style="" 1,0,0,0
+- !important  ∞无穷大（最高权重）
+
+复合选择器存在权重叠加的问题
+
+```html
+<style>
+  li {
+      /*0,0,0,1*/
+      text-anchor: middle;
+  }
+  ul li{
+      /*0,0,0,1+0,0,0,1*/
+      text-anchor: start;
+  }
+</style>
+<ul>
+  <li>a</li>
+
+</ul>
+```
