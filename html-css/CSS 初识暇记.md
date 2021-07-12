@@ -246,7 +246,7 @@
 
 **行内块元素：**
 
-- 同时具有块元素和行元素特别，比如<img/>、<input/>、<td/>
+- 同时具有块元素和行元素特别，比如`<img/>、<input/>、<td/>`
 - 一行显示多个（有空白间隙），可以设置高、宽及内外边距
 
 **元素显示模式转换：**
@@ -266,7 +266,7 @@
     width:100px;
     height:120px;
     display: inline;
- 		display: inline-bolock;
+ 	display: inline-bolock;
 </style>
 <a href="#">增大链接选择范围</a>
 <div> 1 </div> <div> 2 </div>
@@ -284,7 +284,7 @@
     /* 3.背景图片平铺属性：非平铺 */
     background-repeat: no-repeat; 
     /* 4.背景图片位置：（x y)可以是方位或数值 */   
-		background-position: center top;
+	background-position: center top;
     background-position: 30px 20px;
     background-position: 15px center;
     /* 5.背景图片固定： */
@@ -335,6 +335,5 @@
 </style>
 <ul>
   <li>a</li>
-
 </ul>
 ```
