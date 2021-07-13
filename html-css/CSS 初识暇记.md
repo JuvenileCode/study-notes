@@ -145,6 +145,8 @@
 </style>
 ```
 
+**更多选择器可以[参考](https://www.runoob.com/cssref/css-selectors.html)**
+
 ### CSS字体属性
 
  ```html
