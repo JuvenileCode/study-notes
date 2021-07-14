@@ -66,6 +66,11 @@ border设置元素边框，边框粗细、样式、颜色
 
 ```html
 <style>
+  /* 清除内外边距 */
+  * {
+    margin: 0;
+    padding: 0;
+  }
   /*字父盒子塌陷问题*/
   .ho {
     width: 300px;
@@ -76,7 +81,7 @@ border设置元素边框，边框粗细、样式、颜色
     border: 1px solid transparent;
     /*解决2：给父元素定义內边距*/
     padding: 1px;
-    /*解决3：overflow: hidden*/
+    /*解决3(推荐)：overflow: hidden*/
     overflow: hidden;
   }
   .hw {
@@ -85,6 +90,8 @@ border设置元素边框，边框粗细、样式、颜色
     background-color: #f7b84f;
     /*子盒子设置top会将父盒子也下移*/
     margin-top: 50px;
+    
+    
   }
 </style>
 <div class="ho">
