@@ -99,3 +99,57 @@ border设置元素边框，边框粗细、样式、颜色
 </div>
 ```
 
+#### 圆角边框
+
+```html
+<style>
+    .box {
+        /* length越大 圆角度越大 */
+        border-radius: 10px;
+    }
+    .round {
+        width: 200px;
+        height: 200px;
+        background-color: darkseagreen;
+        margin: 20px auto;
+        /* 设置圆 */
+        border-radius: 50%;
+    }
+    .rounded-rectangle {
+        width: 300px;
+        height: 130px;
+        background-color: lavenderblush;
+        margin: 20px auto;
+		/* 设置圆角矩形 */
+        border-radius: 65px;
+    }
+</style>
+<div class="round"></div>
+<div class="rounded-rectangle"></div>
+```
+
+#### 盒子阴影
+
+```html
+<style>
+    .shadow {
+        /* 
+        h-shadow	必需的。水平阴影的位置。允许负值
+        v-shadow	必需的。垂直阴影的位置。允许负值
+        blur	可选。模糊距离
+        spread	可选。阴影的大小
+        color	可选。阴影的颜色。在CSS颜色值寻找颜色值的完整列表
+        inset	可选。从外层的阴影（开始时）改变阴影内侧阴影 
+        */
+        width: 300px;
+        height: 200px;
+        background-color: lightblue;
+        margin: 20px auto;
+    }
+    .shadow:hover {
+        box-shadow: 10px 10px 15px 5px #cccccc ;
+    }
+</style>
+<div class="shadow"></div>
+```
+
