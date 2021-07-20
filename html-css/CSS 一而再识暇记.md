@@ -153,3 +153,68 @@ border设置元素边框，边框粗细、样式、颜色
 <div class="shadow"></div>
 ```
 
+#### 文字阴影
+
+```html
+<style>
+  text-shadow {
+    text-shadow: 5px 5px 6px #cccccc;
+  }
+</style>
+```
+
+### 浮动
+
+一个完整的网页布局由标准流、浮动、定位共同布局完成
+
+**网页布局第一准则：多个块级元素纵向排列找`标准流`，多个块级元素横向排列找`浮动`**
+
+```html
+<!-- none | left | right -->
+<style>
+  .tf{
+    float: left;
+  }
+</style>
+
+```
+
+**浮动的特性：**
+
+1. 浮动元素会脱离标准流；不再保留原先的位置
+2. 浮动元素会一行內显示并且元素顶部对其；撑开会换行显示
+3. 浮动元素会具有`行内块`元素的特性
+
+**浮动元素经常和标准流父级搭配使用**
+
+先用标准流的父元素排列上下位置，内部子元素采取浮动排列左右位置，符合网页布局第一准则。例：
+
+```html
+<style>
+  .box {
+    width: 960px;
+    height: 360px;
+    background-color: #adc6ff;
+    margin: 0 auto;
+  }
+  .left {
+    float: left;
+    width: 180px;
+    height: 360px;
+    background-color: #57a3f3;
+  }
+  .right {
+    float: left;
+    width: 780px;
+    height: 360px;
+    background-color: #47cb89;
+  }
+</style>
+<div class="box">
+    <div class="left">左侧</div>
+    <div class="right">右侧</div>
+</div>
+```
+
+
+
