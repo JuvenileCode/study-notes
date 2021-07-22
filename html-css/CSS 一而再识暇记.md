@@ -165,6 +165,8 @@ border设置元素边框，边框粗细、样式、颜色
 
 ### 浮动
 
+#### 介绍
+
 一个完整的网页布局由标准流、浮动、定位共同布局完成
 
 **网页布局第一准则：多个块级元素纵向排列找`标准流`，多个块级元素横向排列找`浮动`**
@@ -222,4 +224,106 @@ border设置元素边框，边框粗细、样式、颜色
 
 1. 浮动和标准流的父盒子搭配（标准流父元素排列上下位置，内部子元素浮动排列左右位置）
 2. 标准流内部子盒子浮动，理论上其它盒子最好一起浮动
+
+#### 清除浮动
+
+**为什么需要清除浮动？**
+
+由于父级盒子很多情况下不能确定高度（不设置高度会变为0），子盒子浮动不占有位置，会影响下面标准流盒子
+
+清除浮动后，父级根据浮动子盒子自动检测高度
+
+```html
+<style>
+  /* both 清除左右两侧的浮动 */
+  .box {
+    clear: both
+  }
+</style>
+```
+
+**清除浮动方法：**
+
+1. 额外标签法（隔墙法），W3C推荐做法
+2. 父级添加`overflow1`属性
+3. 父级添加`after`伪元素
+4. 父级添加双伪元素
+
+```html
+<style>
+  /* 双伪元素清除浮动 */
+  .clearfix:before,
+  .clearfix:after {
+    content: "";
+    display: table;
+  }
+  .clearfix:after {
+    clear: both;
+  }
+  .clearfix {
+    *zoom: 1;
+  }
+  
+  /* 伪元素清除浮动 */
+  .clearfix:after {
+    content: "";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+  }
+  .clearfix {
+    *zoom: 1;
+  }
+  
+  .top-one {
+    margin: 30px auto 0;
+    width: 400px;
+    background-color: #e6f7ff;
+    /*清除浮动：简单 无法显示溢出的部分*/
+    overflow: hidden;
+  }
+  .one-a {
+    width: 180px;
+    height: 50px;
+    background-color: #ffd77a;
+    float: left;
+  }
+  .one-b {
+    width: 180px;
+    height: 80px;
+    background-color: #ff6700;
+    float: left;
+  }
+  /* 额外标签法（隔墙法），W3C推荐做法
+   * 必须是块级元素、添加无意义标签
+   */
+  .clear-float {
+    clear: both;
+  }
+  .overlapping {
+    margin: 30px auto 0;
+    width: 420px;
+    height: 30px;
+    background-color: #18b566;
+</style>
+<div class="top-one clearfix">
+    <div class="one-a">one</div>
+    <div class="one-b">two</div>
+    <div class="clear-float"></div>
+</div>
+<div class="overlapping"> test</div>
+```
+
+### PS切图
+
+**PS常见的切图有：图层切图、切片切图、PS插件切图等**
+
+图层切图： 右击图层 ---> 快速导出PNG
+
+
+
+
+
+
 
