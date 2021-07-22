@@ -52,7 +52,7 @@ Authorization: Basic ZWxhc3RpYzoxMjM0NTY=
 ###
 ```
 
-#### 索引查询数据
+#### 索引普通查询
 
 ```bash
 # 查询索引下的数据
@@ -79,12 +79,32 @@ Cache-Control: no-cache
 Authorization: Basic ZWxhc3RpYzoxMjM0NTY=
 content-type: application/json; charset=UTF-8
 
-# 分页查询
-{"query":{"match_all":{}},"from":1,"size":5}
+# 排序分页查询
+{"query":{"match_all":{}},"sort":[{"attributes.issue_date":"desc"}],"from":0,"size":15}
+
+# 返回指定的字段
+{"query":{"match_all":{}},"_source":["id","title","attachment.content","attributes.policy_title"]}
+
+# term查询(完全匹配),最好设置为not_analyzed
+{"query":{"term":{"id":"12479"}}}
+
+# terms查询,多词条(terms)查询
+{"query":{"terms":{"id":["12479","12480"]}}}
+
+# match全文查询
+{"query":{"match":{"full_text":"Quick Foxes"}}}
+# operator：用来控制match查询匹配词条的逻辑条件，默认值是or，如果设置为and，表示查询满足所有条件
+# minimum_should_match：当operator参数设置为or时，该参数用来控制应该匹配的分词的最少数量
+{"from":10,"size":5,"query":{"match":{"eventname":{"query":"azure aws cloud security","operator":"or","minimum_should_match":2}}}}
+
+# 短语匹配查询(match_phrase)
+# 分析后的文本中构建短语查询，必须匹配短语中的所有分词，并且保证各个分词的相对位置不变
+{"from":1,"size":100,"query":{"match_phrase":{"eventname":"Open Source"}}}
+
+# 多字段匹配查询
+{"multi_match":{"query":"Microsoft Azure","fields":["subject","message"]}}
 
 ###
-
-
 ```
 
 ### Es Mapping
