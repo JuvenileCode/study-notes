@@ -82,8 +82,10 @@ content-type: application/json; charset=UTF-8
 # 排序分页查询
 {"query":{"match_all":{}},"sort":[{"attributes.issue_date":"desc"}],"from":0,"size":15}
 
-# 返回指定的字段
+# 返回指定的字段简单写法
 {"query":{"match_all":{}},"_source":["id","title","attachment.content","attributes.policy_title"]}
+# 返回指定的字段或排除某些字段不返回（include包含字段  exclude排除字段）
+{"_source":{"include":["obj1.*","obj2.*"],"exclude":["*.description"]},"query":{"match_all":{}},"from":0,"size":30}
 
 # term查询(完全匹配),最好设置为not_analyzed
 {"query":{"term":{"id":"12479"}}}
