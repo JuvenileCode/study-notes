@@ -6,6 +6,10 @@
 
 ### 输出当前用户环境变量
 > `export` 或查询具体某个属性 `export $JAVA_HOME`
+>
+> 修改
+>
+> export JAVA_HOME = /url/
 
 ### 给文件赋权限
 
