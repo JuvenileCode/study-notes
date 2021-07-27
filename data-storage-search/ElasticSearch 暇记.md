@@ -28,6 +28,46 @@ Authorization: Basic ZWxhc3RpYzoxMjM0NTY=
 12.active_shards_percent，正常分片百分比 正常情况为 100%
 ```
 
+#### 查询插件
+
+```bash
+# 查询已经安装的插件
+###
+GET http://192.168.1.50:9200/_cat/plugins
+Accept: */*
+Cache-Control: no-cache
+Authorization: Basic ZWxhc3RpYzoxMjM0NTY=
+###
+```
+
+#### 查看Mapping
+
+```bash
+###
+GET http://192.168.1.50:9200/index_name/_mapping
+Authorization: Basic ZWxhc3RpYzoxMjM0NTY=
+###
+```
+
+#### 分词器测试
+
+```bash
+### 
+POST http://192.168.1.50:9200/_analyze
+Accept: */*
+Cache-Control: no-cache
+Authorization: Basic ZWxhc3RpYzoxMjM0NTY=
+content-type: application/json; charset=UTF-8
+###
+# ES默认分词器standard
+{"analyzer":"standard","text":"In 2020, Java is the best language in the world."}
+
+# IK分词器ik_max_word模式(会将文本做最细粒度的拆分)
+{"analyzer":"ik_max_word","text":"关于印发《北京市房屋建筑和市政基础设施工程劳务分包合同管理暂行办法》的通知"}
+# IK分词器ik_smart模式(做最粗粒度的拆分)
+{"analyzer":"ik_smart","text":"关于印发《北京市房屋建筑和市政基础设施工程劳务分包合同管理暂行办法》的通知"}
+```
+
 #### 查询所有索引
 
 ```bash
