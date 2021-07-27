@@ -111,7 +111,104 @@ content-type: application/json; charset=UTF-8
 
 ### Es Mapping
 
+[参考](https://www.cnblogs.com/wupeixuan/p/12514843.html)
 
+**Mapping 类似于数据库中的表结构定义 `schema`，作用： **
+
+- 定义索引中的字段的名称
+- 定义字段的数据类型，比如字符串、数字、布尔
+- 字段，倒排索引的相关配置，比如设置某个字段为不被索引、记录 position 等
+
+**在 ES 早期版本，一个索引下是可以有多个 Type 的，从 7.0 开始，一个索引只有一个 Type，也可以说一个 Type 有一个 Mapping 定义**
+
+#### ES字段类型
+
+ES 字段类型主要有：核心类型、复杂类型、地理类型以及特殊类型
+![es-data-type-img](https://raw.githubusercontent.com/JuvenileCode/study-notes/master/image-source/ES_Data_Type.png)
+
+#### 字符串类型
+
+在 ES 7.x 有两种字符串类型：`text` 和 `keyword`，在 ES 5.x 之后 `string` 类型已经不再支持了
+
+`text` 类型适用于需要被全文检索的字段，例如新闻正文、邮件内容等比较长的文字，`text` 类型会被 Lucene 分词器（Analyzer）处理为一个个词项，并使用 Lucene 倒排索引存储，**text 字段不能被用于排序**，如果需要使用该类型的字段只需要在定义映射时指定 JSON 中对应字段的 `type` 为 `text`
+
+`keyword` 适合简短、结构化字符串，例如主机名、姓名、商品名称等，**可以用于过滤、排序、聚合检索，也可以用于精确查询**
+
+#### 数字类型
+
+数字类型分为 `long、integer、short、byte、double、float、half_float、scaled_float`。
+
+数字类型的字段在满足需求的前提下应当尽量选择范围较小的数据类型，字段长度越短，搜索效率越高，对于浮点数，可以优先考虑使用 `scaled_float` 类型，该类型可以通过缩放因子来精确浮点数，例如 12.34 可以转换为 1234 来存储。
+
+#### 日期类型
+
+在 ES 中日期可以为以下形式：
+
+- 格式化的日期字符串，例如 2020-03-17 00:00、2020/03/17
+- 时间戳（和 1970-01-01 00:00:00 UTC 的差值），单位毫秒或者秒
+
+**即使是格式化的日期字符串，ES 底层依然采用的是时间戳的形式存储。**
+
+#### 布尔类型
+
+JSON 文档中同样存在布尔类型，不过 JSON 字符串类型也可以被 ES 转换为布尔类型存储，前提是字符串的取值为 `true` 或者 `false`，布尔类型常用于检索中的过滤条件。
+
+#### object （对象类型）
+
+JSON 字符串允许嵌套对象，一个文档可以嵌套多个、多层对象。可以通过对象类型来存储二级文档，不过由于 Lucene 并没有内部对象的概念，ES 会将原 JSON 文档扁平化，例如文档：
+
+```json
+Copy{
+	"name": {
+		"first": "wu",
+		"last": "px"
+	}
+}
+```
+
+实际上 ES 会将其转换为以下格式，并通过 Lucene 存储，即使 `name` 是 `object` 类型：
+
+```json
+Copy{
+	"name.first": "wu",
+	"name.last": "px"
+}
+```
+
+#### nested（嵌套类型）
+
+嵌套类型可以看成是一个特殊的对象类型，可以让对象数组独立检索，例如文档
+
+嵌套类型可以看成是一个特殊的对象类型，可以让对象数组独立检索，例如文档：
+
+```json
+Copy{
+  "group": "users",
+  "username": [
+	{ "first": "wu", "last": "px"},
+	{ "first": "hu", "last": "xy"},
+	{ "first": "wu", "last": "mx"}
+  ]
+}
+```
+
+`username` 字段是一个 JSON 数组，并且每个数组对象都是一个 JSON 对象。如果将 `username` 设置为对象类型，那么 ES 会将其转换为：
+
+```json
+Copy{
+  "group": "users",
+  "username.first": ["wu", "hu", "wu"],
+  "username.last": ["px", "xy", "mx"]
+}
+```
+
+可以看出转换后的 JSON 文档中 `first` 和 `last` 的关联丢失了，如果尝试搜索 `first` 为 `wu`，`last` 为 `xy` 的文档，那么成功会检索出上述文档，但是 `wu` 和 `xy` 在原 JSON 文档中并不属于同一个 JSON 对象，应当是不匹配的，即检索不出任何结果。
+
+嵌套类型就是为了解决这种问题的，嵌套类型将数组中的每个 JSON 对象作为独立的隐藏文档来存储，每个嵌套的对象都能够独立地被搜索，所以上述案例中虽然表面上只有 1 个文档，但实际上是存储了 4 个文档。
+
+#### Dynamic Mapping
+
+Dynamic Mapping 机制使我们不需要手动定义 Mapping，ES 会**自动根据文档信息来判断字段合适的类型**，但是有时候也会推算的不对，比如地理位置信息有可能会判断为 `Text`，当类型如果设置不对时，会导致一些功能无法正常工作，比如 Range 查询。
 
 ### JAVA Api
 
