@@ -113,7 +113,7 @@ content-type: application/json; charset=UTF-8
 
 [参考](https://www.cnblogs.com/wupeixuan/p/12514843.html)
 
-**Mapping 类似于数据库中的表结构定义 `schema`，作用： **
+**Mapping 类似于数据库中的表结构定义 `schema`，作用：** 
 
 - 定义索引中的字段的名称
 - 定义字段的数据类型，比如字符串、数字、布尔
