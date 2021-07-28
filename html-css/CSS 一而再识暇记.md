@@ -1,4 +1,4 @@
-##  CSS 一而再识暇记
+CSS 一而再识暇记
 
 ### 盒子模型
 
@@ -342,9 +342,61 @@ border设置元素边框，边框粗细、样式、颜色
 3. 文本属性：color /font /text-decoration...
 4. 其它属性(CSS3)：content/cursor/...
 
+### 定位
 
+1. 浮动可以让多个块级盒子一行没有缝隙排列显示，经常用于横向排列盒子
 
+2. 定位则是可以让盒子自由的在某个`盒子內移动位置`或者`固定屏幕中某个位置`；并且可以压住其它盒子
 
+**定位 = 定位模式 + 边偏移**
+
+**定位模式：**
+
+通过CSS的`position`属性来设置，有四个值：
+
+```json
+{"static":"静态定位","relative":"相对定位","absolute":"绝对定位","fixed":"固定定位"}
+```
+
+**边偏移：**
+
+用于确定盒子最终位置；有`top`,`bottom`,`left`和`right`。
+
+#### 静态定位
+
+1. 默认的定位方法，无定义的意思 `<!-- 选择器 {position: static;} -->`
+
+2. 静态定位按标准流特性摆放位置，它没有边偏移；布局很少用到。
+
+#### 相对定位
+
+1. 在元素移动位置，相对它原来的位置 `<!-- 选择器 {position: relative;} -->`
+
+2. 原来标准流位置继续占用，不脱标
+
+```html
+<style>
+  .box1 {
+    margin: 0 auto;
+    position: relative;
+    top: 100px;
+    left: 100px;
+    width: 200px;
+    height: 200px;
+    background-color: #ff6700;
+  }
+  .box2 {
+    margin: 0 auto;
+    width: 200px;
+    height: 200px;
+    background-color: #47cb89;
+  }
+</style>
+<div class="box1"></div>
+<div class="box2"></div>
+```
+
+所以，相对定义用于辅助绝对定位
 
 
 
