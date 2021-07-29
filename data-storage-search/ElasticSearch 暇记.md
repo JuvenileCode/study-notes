@@ -42,12 +42,50 @@ Authorization: Basic ZWxhc3RpYzoxMjM0NTY=
 
 #### 查看Mapping
 
+自定义Mapping模板
+
+```json
+{
+    "properties": {
+        "id": {
+            "type": "keyword",
+            "ignore_above": 64
+        },
+        "title": {
+            "type": "text",
+            "analyzer": "ik_max_word"
+        },
+        "issue_date": {
+            "type": "date",
+            "format": "yyyy-MM-dd"
+        },
+        "source_type": {
+            "type": "byte"
+        },
+        "file": {
+            "type": "object",
+            "properties": {
+                "file_name": {
+                    "type": "text"
+                },
+                "file_ext": {
+                    "type": "keyword"
+                }
+            }
+        }
+    }
+```
+
+查看索引的mapping
+
 ```bash
 ###
 GET http://192.168.1.50:9200/index_name/_mapping
 Authorization: Basic ZWxhc3RpYzoxMjM0NTY=
 ###
 ```
+
+不能修改一个已经存在的字段的[mapping](https://www.cnblogs.com/z00377750/p/13308436.html)或类型，如果确实需要修改字段映射，需要重新建立索引并使用[reindex](https://www.cnblogs.com/Ace-suiyuan008/p/9985249.html) 迁移文档数据到新索引。
 
 #### 分词器测试
 
@@ -251,4 +289,311 @@ Copy{
 Dynamic Mapping 机制使我们不需要手动定义 Mapping，ES 会**自动根据文档信息来判断字段合适的类型**，但是有时候也会推算的不对，比如地理位置信息有可能会判断为 `Text`，当类型如果设置不对时，会导致一些功能无法正常工作，比如 Range 查询。
 
 ### JAVA Api
+
+`Java High Level REST Client`以下简称High Level）是ES官方推荐的JAVA客户端，具有即时同步ES服务器版本，功能特性齐全等特点；所以，代码基于HighLevel：
+
+[参考一](https://www.cnblogs.com/z00377750/p/13300196.html)
+
+[参考二](https://www.cnblogs.com/z00377750/p/13372554.html)
+
+#### maven导入
+
+```xml
+<!-- High Level版本建议与ES版本一致 elasticsearch operate jar-->
+<dependency>
+    <groupId>org.elasticsearch.client</groupId>
+    <artifactId>elasticsearch-rest-high-level-client</artifactId>
+    <version>7.8.1</version>
+</dependency>
+```
+
+#### 连接配置
+
+```java
+import cn.hutool.core.util.StrUtil;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import java.util.List;
+/**
+ * @author: Bin.L
+ * @date: 2021/7/16 0016 18:03
+ * @Description:
+ */
+@Configuration
+public class ElasticSearchConfig {
+
+    @Value("192.168.1.50:9200")
+    private List<String> uris;
+
+    @Value("elastic")
+    private String userName;
+
+    @Value("123456")
+    private String password;
+
+    @Bean
+    public RestHighLevelClient restHighLevelClient() {
+        HttpHost[] httpHosts = createHosts();
+        RestClientBuilder restClientBuilder = RestClient.builder(httpHosts)
+                .setHttpClientConfigCallback(httpClientBuilder -> {
+                    CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+                    credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(userName, password));
+                    return httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                });
+        RestHighLevelClient restHighLevelClient = new RestHighLevelClient(restClientBuilder);
+        return restHighLevelClient;
+    }
+
+    private HttpHost[] createHosts() {
+        HttpHost[] httpHosts = new HttpHost[uris.size()];
+        for (int i = 0; i < uris.size(); i++) {
+            String hostStr = uris.get(i);
+            String[] host = hostStr.split(":");
+            httpHosts[i] = new HttpHost(StrUtil.trim(host[0]), Integer.valueOf(StrUtil.trim(host[1])));
+        }
+        return httpHosts;
+    }
+}
+```
+
+#### 索引基本操作
+
+```java
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.get.GetRequest;
+import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.support.WriteRequest;
+import org.elasticsearch.action.support.master.AcknowledgedResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.rest.RestStatus;
+import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.io.IOException;
+
+/**
+ * @author: Bin.L
+ * @date: 2021/7/16 0016 18:07
+ * @Description:
+ */
+
+@Service
+@Slf4j
+public class ElasticSearchService {
+
+    @Resource
+    RestHighLevelClient restHighLevelClient;
+
+    /**
+     * 根据Mapping创建索引
+     *
+     * @param indexName
+     * @param mapping
+     * @return
+     */
+    public boolean createIndex(String indexName, String mapping) {
+        GetIndexRequest getIndexRequest = new GetIndexRequest(indexName);
+        try {
+            boolean exists = restHighLevelClient.indices().exists(getIndexRequest, RequestOptions.DEFAULT);
+            if (!exists) {
+                CreateIndexRequest createIndexRequest = new CreateIndexRequest(indexName);
+                Settings settings = Settings.builder()
+                        .put("index.number_of_shards", 1)
+                        .put("index.number_of_replicas", 1)
+                        .build();
+
+                createIndexRequest.settings(settings).mapping(mapping, XContentType.JSON);
+                restHighLevelClient.indices().create(createIndexRequest, RequestOptions.DEFAULT);
+            }
+        } catch (Exception e) {
+            log.error("create index mapping error: {}", e.getMessage());
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    /**
+     * 删除索引
+     *
+     * @param indexName
+     * @return
+     */
+    public boolean deleteIndex(String indexName) {
+        DeleteIndexRequest request = new DeleteIndexRequest(indexName);
+        try {
+            AcknowledgedResponse delete = restHighLevelClient.indices().delete(request, RequestOptions.DEFAULT);
+            return delete.isAcknowledged();
+        } catch (Exception e) {
+            log.error("delete es index error: {}", e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 添加索引下的文档（es7.0版本去掉type)
+     *
+     * @param indexName
+     * @param docJson
+     * @return
+     */
+    public boolean insertOne(String indexName, String docJson, String id) {
+        IndexRequest request = new IndexRequest(indexName);
+        request.timeout(TimeValue.timeValueSeconds(1));
+        request.setRefreshPolicy(WriteRequest.RefreshPolicy.WAIT_UNTIL);
+        if (StrUtil.isNotBlank(id)) {
+            request.id(id);
+        }
+        request.source(docJson, XContentType.JSON);
+        try {
+            IndexResponse response = restHighLevelClient.index(request, RequestOptions.DEFAULT);
+            log.info("index add doc Response: {}", response.toString());
+            if (response.status().getStatus() == RestStatus.CREATED.getStatus()) {
+                return true;
+            }
+        } catch (Exception e) {
+            log.error("index[{}] add doc error: {}", indexName, e.getMessage());
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    /**
+     * 判断文档是否存在
+     *
+     * @param indexName
+     * @param id
+     */
+    public void isExistsDoc(String indexName, String id) {
+        GetRequest getRequest = new GetRequest(indexName, id);
+        getRequest.fetchSourceContext(new FetchSourceContext(false));
+        getRequest.storedFields("_none_");
+        try {
+            boolean exists = restHighLevelClient.exists(getRequest, RequestOptions.DEFAULT);
+            System.out.println(exists);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取文档内容
+     *
+     * @param indexName
+     * @param id
+     */
+    public <T> T getIdDoc(String indexName, String id, Class<T> beanClass) {
+        GetRequest getRequest = new GetRequest(indexName, id);
+        try {
+            GetResponse getResponse = restHighLevelClient.get(getRequest, RequestOptions.DEFAULT);
+            T object = JSONUtil.toBean(getResponse.getSourceAsString(), beanClass);
+            System.out.println(getResponse.getSourceAsString());
+            System.out.println(getResponse.getId());
+            return object;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 删除某个文档
+     *
+     * @param indexName
+     * @param id
+     * @return
+     */
+    public boolean deleteDocId(String indexName, String id) {
+        DeleteRequest request = new DeleteRequest(indexName, id);
+        request.timeout(TimeValue.timeValueSeconds(1));
+        request.setRefreshPolicy(WriteRequest.RefreshPolicy.WAIT_UNTIL);
+        try {
+            DeleteResponse deleteResponse = restHighLevelClient.delete(request, RequestOptions.DEFAULT);
+            if (deleteResponse.status().getStatus() == RestStatus.OK.getStatus()) {
+                return true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+}
+```
+
+**测试代码：**
+
+```java
+@SpringBootTest
+class ElasticSearchServiceTest {
+    public static final String POLICY = "policy";
+    
+    @Autowired
+    ElasticSearchService elasticSearchService;
+
+    @Test
+    public void createIndex() {
+        // 自己定义mapping
+        String mapping = "{\"properties\":{\"id\":{\"type\":\"keyword\",\"ignore_above\":64},\"title\":{\"type\":\"text\",\"analyzer\":\"ik_max_word\"},\"issue_date\":{\"type\":\"date\",\"format\":\"yyyy-MM-dd\"},\"source_type\":{\"type\":\"byte\"},\"file\":{\"type\":\"object\",\"properties\":{\"file_name\":{\"type\":\"text\"},\"file_ext\":{\"type\":\"keyword\"}}}}}";
+        System.out.println(elasticSearchService.createIndex(POLICY, mapping));
+    }
+
+    @Test
+    public void deleteIndex() {
+        System.out.println(elasticSearchService.deleteIndex(POLICY));
+    }
+
+    @Test
+    public void insertOne() {
+        EsPolicyPO esPolicyPO = new EsPolicyPO();
+        esPolicyPO.setId("__0V-QO89Eeu5bqoNtw7SfQ");
+        esPolicyPO.setTitle("关于发布北京市地方标准《绿色建筑评价标准》的通知");
+        esPolicyPO.setIssueDate(LocalDate.now());
+        esPolicyPO.setSourceType(1);
+        esPolicyPO.setFile(new EsPolicyPO.File("关于发布北京市地方标准《绿色建筑评价标准》的通知.html", "html"));
+        System.out.println(elasticSearchService.insertOne(POLICY, JSONUtil.toJsonPrettyStr(esPolicyPO), esPolicyPO.getId()));
+    }
+
+    @Test
+    public void isExists() {
+        elasticSearchService.isExistsDoc(POLICY, "__0V-QO89Eeu5bqoNtw7SfQ");
+    }
+
+    @Test
+    public void getIdDoc() {
+        System.out.println(elasticSearchService.getIdDoc(POLICY, "__0V-QO89Eeu5bqoNtw7SfQ", EsPolicyPO.class));
+    }
+
+    @Test
+    public void deleteDocId() {
+        System.out.println(elasticSearchService.deleteDocId(POLICY, "__0V-QO89Eeu5bqoNtw7SfQ"));
+    }
+}
+```
+
+
 
