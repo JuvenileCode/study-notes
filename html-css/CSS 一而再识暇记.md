@@ -398,5 +398,39 @@ border设置元素边框，边框粗细、样式、颜色
 
 所以，相对定义用于辅助绝对定位
 
+#### 绝对定位
 
+元素在移动位置时现对祖先元素来定位
+
+1. 如果没有父元素或者父元素没有定位，则以浏览器为标准定位
+2. 如果父元素有定位（相对｜绝对｜固定），则以最近一级有定位的父元素为参照
+3. 绝对定位不占有原位置，脱标
+
+```html
+<style>
+  .on {
+    position: relative;
+    width: 560px;
+    height: 560px;
+    background-color: #e6fffb;
+  }
+  .on-one {
+    width: 360px;
+    height: 360px;
+    background-color: #adc6ff;
+  }
+  .absolute-one {
+    position: absolute;
+    left: 30px;
+    top: 20px;
+    width: 120px;
+    height: 120px;
+    background-color: #e6f7ff;
+  }
+</style>
+<div class="on">
+    <div class="on-one"></div>
+    <div class="absolute-one"></div>
+</div>
+```
 
