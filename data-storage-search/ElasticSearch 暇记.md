@@ -57,7 +57,7 @@ Authorization: Basic ZWxhc3RpYzoxMjM0NTY=
         },
         "issue_date": {
             "type": "date",
-            "format": "yyyy-MM-dd"
+            "format": "yyyy-MM-dd||epoch_millis"
         },
         "source_type": {
             "type": "byte"
@@ -673,4 +673,85 @@ class ElasticSearchServiceTest {
 ```
 
 #### 文档查询
+
+```java
+import cn.hutool.json.JSONUtil;
+import com.example.demo.fireworks.entity.po.EsPolicyPO;
+import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.search.*;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.search.Scroll;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.SortOrder;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * @author: Bin.L
+ * @date: 2021/7/30 0030 14:33
+ * @Description: ES 搜索文档练习
+ */
+
+@Slf4j
+@Service
+public class ElasticSearchSelectService {
+
+    @Resource
+    RestHighLevelClient restHighLevelClient;
+
+    /**
+     * from-size 分页
+     * 基于性能考虑：from和size两者之和不能超过1w
+     * 根据from的值，将查询到的数据舍弃一部分（from=500 size=10 其原理查510条数据，舍弃前面500条）from的增加，性能越差
+     *
+     * @return
+     */
+    public List<EsPolicyPO> ordinaryPage(String indexName, Integer offset, Integer size) {
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        sourceBuilder.from(offset);
+        sourceBuilder.size(size);
+        sourceBuilder.sort("issue_date", SortOrder.DESC);
+        try {
+            SearchRequest searchRequest = new SearchRequest(indexName);
+            searchRequest.source(sourceBuilder);
+            SearchResponse searchResp = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+            // 获取结果集
+            SearchHits hits = searchResp.getHits();
+            long count = hits.getTotalHits().value;
+            log.info("----- es count: {}", count);
+            List<EsPolicyPO> resultList = new ArrayList<>(hits.getHits().length);
+            for (SearchHit hit : hits.getHits()) {
+                EsPolicyPO esPolicyPO = JSONUtil.toBean(hit.getSourceAsString(), EsPolicyPO.class);
+                resultList.add(esPolicyPO);
+            }
+            return resultList;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+   /**
+     * scroll深分页
+     * 相对于from和size的分页来说，使用scroll可以模拟一个传统数据的游标，记录当前读取的文档信息位置。
+     * 这个分页的用法，不是为了实时查询数据，而是为了一次性查询大量的数据（甚至是全部的数据）
+     *
+     * @return
+     */
+    public List<EsPolicyPO> scrollPage(String indexName, Integer offset, Integer size) {
+        
+    }
+   
+
+}
+```
 
