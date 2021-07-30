@@ -541,6 +541,54 @@ public class ElasticSearchService {
         }
         return false;
     }
+    
+    /**
+     * 批量保存文档
+     *
+     * @param indexName
+     * @param list
+     */
+    public void batchInsertDoc(String indexName, List<EsPolicyPO> list) {
+        BulkRequest bulkRequest = new BulkRequest();
+        bulkRequest.timeout(TimeValue.timeValueSeconds(3));
+        bulkRequest.setRefreshPolicy(WriteRequest.RefreshPolicy.WAIT_UNTIL);
+        for (EsPolicyPO po : list) {
+            bulkRequest.add(new IndexRequest(indexName).id(po.getId()).source(JSONUtil.toJsonStr(po), XContentType.JSON));
+        }
+        try {
+            BulkResponse bulkResponse = restHighLevelClient.bulk(bulkRequest, RequestOptions.DEFAULT);
+            // 检查是否有失败 至少有一个执行失败时，返回true
+            if (bulkResponse.hasFailures()) {
+                log.error("Batch Save Doc is Error ...");
+            }
+            // 迭代所有操作的结果
+            for (BulkItemResponse bulkItemResponse : bulkResponse) {
+                // 判断操作是否失败
+                if (bulkItemResponse.isFailed()) {
+                    // 如果失败，则获取失败信息
+                    BulkItemResponse.Failure failure = bulkItemResponse.getFailure();
+                    log.error("ERROR: {}", JSONUtil.toJsonStr(failure));
+                    // 其它业务处理
+                    continue;
+                }
+                // 检索操作的响应（成功与否），可以是IndexResponse、UpdateResponse或DeleteResponse，都可以看作是DocWriteResponse实例
+                DocWriteResponse itemResponse = bulkItemResponse.getResponse();
+                switch (bulkItemResponse.getOpType()) {
+                    case INDEX:    // 处理索引操作的响应
+                    case CREATE:
+                        IndexResponse indexResponse = (IndexResponse) itemResponse;
+                        break;
+                    case UPDATE:   // 处理更新操作的响应
+                        UpdateResponse updateResponse = (UpdateResponse) itemResponse;
+                        break;
+                    case DELETE:   // 处理删除操作的响应
+                        DeleteResponse deleteResponse = (DeleteResponse) itemResponse;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
 ```
@@ -592,8 +640,37 @@ class ElasticSearchServiceTest {
     public void deleteDocId() {
         System.out.println(elasticSearchService.deleteDocId(POLICY, "__0V-QO89Eeu5bqoNtw7SfQ"));
     }
+    
+    @Autowired
+    ElasticSearchService elasticSearchService;
+    /**
+     * Mybatis plus 流式读取数据同步到ES（ES批量保存操作）
+     */
+    public void dataSynchronizeEs() {
+        List<EsPolicyPO> listEs = new ArrayList<>(500);
+        policyInfoMapper.readStreamingData(resultContext -> {
+            // 取数据库查询对象
+            PolicyInfo policyInfo = resultContext.getResultObject();
+            // 转换ES存储对象
+            EsPolicyPO esPolicyPO = new EsPolicyPO();
+            esPolicyPO.setId(policyInfo.getId());
+            esPolicyPO.setTitle(policyInfo.getTitle());
+            esPolicyPO.setIssueDate(policyInfo.getIssueDate());
+            esPolicyPO.setSourceType(policyInfo.getSourceType());
+            esPolicyPO.setFile(new EsPolicyPO.File(policyInfo.getFileName(), policyInfo.getFileExt()));
+            listEs.add(esPolicyPO);
+            if (listEs.size() == 500) {
+                // ES批量保存文档
+                elasticSearchService.batchInsertDoc("policy", listEs);
+                listEs.clear();
+            }
+        });
+        log.info("最后保存的集合数据大小位: {}", listEs.size());
+        elasticSearchService.batchInsertDoc("policy", listEs);
+		listEs.clear();
+    }
 }
 ```
 
-
+#### 文档查询
 
