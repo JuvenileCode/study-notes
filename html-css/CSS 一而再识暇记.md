@@ -64,6 +64,8 @@ border设置元素边框，边框粗细、样式、颜色
 
 #### 外边距合并塌陷
 
+当父元素没设置足够大小的时候，而子元素设置了浮动的属性，子元素就会跳出父元素的边界（脱离文档流），尤其是当父元素的高度为auto时，而父元素中又没有其它非浮动的可见元素时，父盒子的高度就会直接塌陷为零， 我们称这是CSS高度塌陷
+
 ```html
 <style>
   /* 清除内外边距 */
@@ -315,6 +317,23 @@ border设置元素边框，边框粗细、样式、颜色
 <div class="overlapping"> test</div>
 ```
 
+### 元素的显示与隐藏
+
+让一个元素在页面中隐藏或者显示出来
+
+1. display 显示隐藏 （**display隐藏元素后不再占有原来的位置**）
+
+   1.1  `display:none` 隐藏对象
+
+   1.2  `display:block` 除了转换块级元素，同时还有显示元素的意思
+
+2. visibility 显示隐藏（**visibility隐藏元素后继续占有原来的位置**）
+   2.1  `visiblity:visible` 元素可视
+   2.2  `visibility:hidden` 元素隐藏
+
+3. overflow 溢出显示隐藏 （有定位的盒子慎用hidden，它会隐藏多余的部分）
+   3.1 `visible | hedden | scroll | auto`  默认全显示 | 溢出部分隐藏 | 始终添加滚动条 | 溢出后添加滚动条
+
 ### PS切图
 
 **PS常见的切图有：图层切图、切片切图、PS插件切图等**
@@ -433,4 +452,157 @@ border设置元素边框，边框粗细、样式、颜色
     <div class="absolute-one"></div>
 </div>
 ```
+
+**子绝父相：**
+
+定位中最常用的一种方式：子级是绝对定位，父级要用相对定位
+
+1. 子级绝对定位，不会占有位置，可以放到父盒子里的任何位置
+2. 父盒子需要加定位限制子盒子在父盒子內显示
+
+#### 固定定位
+
+**固定于浏览器可视区域。浏览器滚动元素位置不会变**
+
+1. 以浏览器可视窗口为参照点移动
+
+2. 固定定位不占有原先位置，脱标；可以看做一种特殊的绝对定位
+
+```html
+<style>
+  .fixed {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+  }
+</style>
+<div class="fixed">
+    <em style="font-size: 18px;color: #47cb89"> 广告位招租 </em>
+</div>
+```
+
+**固定定位小技巧：固定版心右侧位置**
+
+1. 固定定位盒子left:50%，走到浏览器可视区（版心）的一半位置
+2. 固定定位盒子margin-left:版心宽度的一半距离。
+
+```html
+<style>
+  .w {
+    width: 800px;
+    height: 1400px;
+    background-color: pink;
+    margin: 0 auto;
+  }
+  .fixed {
+    position: fixed;
+    /* 1. 走浏览器宽度的一半 */
+    left: 50%;
+    /* 2. 利用margin 走版心盒子宽度的一半距离 */
+    margin-left: 405px;
+    width: 50px;
+    height: 150px;
+    background-color: skyblue;
+  }
+</style>
+<div class="fixed"></div>
+<div class="w">版心盒子</div>
+```
+
+#### 粘性定位
+
+**粘性定位可以被认为是相对定位和固定定位的混合** `{position: sticky; top:10px}`
+
+1. 以浏览器的可视窗口为参照点移动（固定定位特性）
+2. 粘性定位占有原先的位置（现对定位特性）
+3. 必须添加top、left、right、bottom其中一个才有效
+
+#### 定位叠放顺序
+
+在使用布局时，可能出现盒子重叠的情况；可以用`z-index`来控制盒子的前后次序（z轴）。
+
+```javascript
+选择器 {z-index:1;}
+```
+
+1. 数值可以是正整数，负整数或0，默认是auto，数值越大，盒子越靠上
+
+2. 如果属性相同，则按书写顺序排
+3. 只有定位的盒子才有z-index属性
+
+```html
+<style>
+  .box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 200px;
+  }
+  .xiongda {
+    background-color: red;
+    z-index: 1;
+  }
+  .xionger {
+    background-color: green;
+    left: 50px;
+    top: 50px;
+    z-index: 2;
+  }
+  .qiangge {
+    background-color:blue;
+    left: 100px;
+    top: 100px;
+  }
+</style>
+<div class="box xiongda">熊大</div>
+<div class="box xionger">熊二</div>
+<div class="box qiangge">光头强</div>
+```
+
+#### 绝对定位居中
+
+加了绝对定位的盒子不能通过`margin:0 auto`水平居中
+
+```html
+<style>
+  .box {
+    width: 300px;
+    height: 250px;
+    position: absolute;
+    /*垂直居中*/
+    left: 50%;
+    margin-left: -150px;
+    /*水平居中*/
+    top: 50%;
+    margin-top: -125px;
+    /* 绝对定位的盒子设置margin无效
+    margin: 0 auto;*/
+    background-color: #a0d911;
+  }
+</style>
+```
+
+#### 拓展
+
+- 绝对定位（固定定位）会完全压住盒子
+- 浮动元素只会压住标准流盒子，但不会压住标准流盒子里的文字或图片
+
+### 网页布局总结
+
+通过盒子模型，清楚知道大部分html标签是一个盒子
+
+通过CSS浮动、定位可以让每个盒子排列成为网页
+
+**标准流**
+
+可以让盒子上下或者左右排列，`垂直的块级盒子显示就用标准流布局`
+
+**浮动**
+
+可以让多个块级元素一行显示或者左右对其盒子，`多个盒子水平显示就用浮动布局`
+
+**定位**
+
+定位最大的特点是有层叠的概念，可以让多个盒子前后叠压来显示，`如果元素自由在某个盒子內移动就用定位布局`
 
