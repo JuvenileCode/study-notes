@@ -187,6 +187,167 @@ content-type: application/json; charset=UTF-8
 ###
 ```
 
+#### 简单聚合
+
+**语法：**
+
+- aggs：聚合函数
+- NAME：给这个操作取一个名字
+- AGG_TYPE：聚合类型
+
+计算某个tag下的商品
+
+```json
+{
+  "aggs": {
+    "group_by_tags": {
+      "terms": {      //可以理解为是分组的意思
+        "field": "tags"
+      }
+    }
+  },
+  "size": 0
+}
+--------------- 响应
+{
+  "took": 146,
+  "timed_out": false,
+  "_shards": {
+    "total": 5,
+    "successful": 5,
+    "failed": 0
+  },
+  "hits": {
+    "total": 4,
+    "max_score": 0,
+    "hits": []
+  },
+  "aggregations": {
+    "group_by_tags": {
+      "doc_count_error_upper_bound": 0,
+      "sum_other_doc_count": 0,
+      "buckets": [
+        {
+          "key": "fangzhu",
+          "doc_count": 2
+        },
+        {
+          "key": "meibai",
+          "doc_count": 2
+        },
+        {
+          "key": "qingxin",
+          "doc_count": 1
+        }
+      ]
+    }
+  }
+}
+```
+
+在请求的时候使用了一个 size=0,这个参数影响响应数据中的 hits.hits 中的数据
+
+- hits.total：总共参与聚合运算的目标数据，这里是 4 条
+- hits.hits：这 4条 数据的详细信息（原数据）
+- aggregations 聚合的响应
+- aggregations.group_by_tags.buckets：桶，也就是聚合的结果
+
+对于 buckets 返回的数据条数也可以通过 size 控制，aggs.group_by_tags.terms.size = n
+
+**先搜索，在聚合**
+
+```json
+/* 对名称中包含 yagao 的商品，计算每个 tag 下的商品数量 */
+{
+  "query": {
+    "match": {
+      "name": "yagao"
+    }
+  },
+  "aggs": {
+    "group_by_tags": {
+      "terms": {
+        "field": "tags"
+      }
+    }
+  },
+  "size": 0
+}
+```
+
+**嵌套聚合**
+
+```json
+/* 先对 tags 进行分组，再计算商品的平均价格; 并按商品评价价格排序*/
+{
+  "aggs": {
+    "group_by_tags": {
+      "terms": {
+        "field": "tags",
+        "order": {
+          "avg_by_price": "desc"
+        }
+      },
+      "aggs": {
+        "avg_by_price": {
+          "avg": {
+            "field": "price"
+          }
+        }
+      }
+    }
+  },
+  "size": 0
+}
+```
+
+**多次嵌套**
+
+```json
+/* 按照指定的价格区间进行分组，然后再每组内再按照 tags 进行分组，并计算每组内的商品平均价格，并按照平均价格进行降序排列 */
+{
+  "aggs": {
+    "group_by_price": {
+      "range": {
+        "field": "price",
+        "ranges": [
+          {
+            "from": 0,
+            "to": 20
+          },
+          {
+            "from": 20,
+             "to": 40
+          },
+          {
+            "from": 40,
+            "to": 50
+          }
+        ]
+      },
+      "aggs": {
+        "group_by_tags": {
+          "terms": {
+            "field": "tags",
+            "order": {
+              "group_by_avg": "desc"
+            }
+          },
+          "aggs": {
+            "group_by_avg": {
+              "avg": {
+                "field": "price"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "size": 0
+}
+```
+
 ### Es Mapping
 
 [参考](https://www.cnblogs.com/wupeixuan/p/12514843.html)
@@ -748,7 +909,42 @@ public class ElasticSearchSelectService {
      * @return
      */
     public List<EsPolicyPO> scrollPage(String indexName, Integer offset, Integer size) {
-        
+        SearchRequest request = new SearchRequest(indexName);
+        request.scroll(TimeValue.timeValueMinutes(1L));
+        SearchSourceBuilder builder = new SearchSourceBuilder();
+        builder.size(size);
+        builder.sort("issue_date", SortOrder.DESC);
+        builder.query(QueryBuilders.matchAllQuery());
+        request.source(builder);
+        try {
+            SearchResponse searchResponse = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+            String scrollId = searchResponse.getScrollId();
+            SearchHit[] searchHits = searchResponse.getHits().getHits();
+            log.info("---scrollId: {}, searchHits length: {}", scrollId, searchHits.length);
+            List<EsPolicyPO> resultList = new ArrayList<>();
+            while (true) {
+                SearchScrollRequest scrollRequest = new SearchScrollRequest(scrollId);
+                scrollRequest.scroll(TimeValue.timeValueMinutes(1L));
+                SearchResponse scrollResp = restHighLevelClient.scroll(scrollRequest, RequestOptions.DEFAULT);
+                if (scrollResp.getHits().getHits() != null && scrollResp.getHits().getHits().length > 0) {
+                    for (SearchHit hit : scrollResp.getHits().getHits()) {
+                        EsPolicyPO esPolicyPO = JSONUtil.toBean(hit.getSourceAsString(), EsPolicyPO.class);
+                        resultList.add(esPolicyPO);
+                    }
+                } else {
+                    log.info(" no date execute break ");
+                    break;
+                }
+            }
+            ClearScrollRequest clearScrollRequest = new ClearScrollRequest();
+            clearScrollRequest.addScrollId(scrollId);
+            ClearScrollResponse clearScrollResponse = restHighLevelClient.clearScroll(clearScrollRequest, RequestOptions.DEFAULT);
+            return resultList;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
    
 
