@@ -3,13 +3,13 @@
 ### 设置代理
 
 ```shell
-# 设置代理
+# 设置代理(根据代理软件代理端口设置)
 ## http代理
-git config --global https.proxy http://127.0.0.1:1080
-git config --global https.proxy https://127.0.0.1:1080
+git config --global https.proxy http://127.0.0.1:1089
+git config --global https.proxy https://127.0.0.1:1089
 ## socks5代理
-git config --global http.proxy 'socks5://127.0.0.1:1087'
-git config --global https.proxy 'socks5://127.0.0.1:1087'
+git config --global http.proxy 'socks5://127.0.0.1:1080'
+git config --global https.proxy 'socks5://127.0.0.1:1080'
 # 查看
 git config --global  --get http.proxy
 git config --global  --get https.proxy
