@@ -4,8 +4,15 @@
 
 ```shell
 # 设置代理
+## http代理
 git config --global https.proxy http://127.0.0.1:1080
 git config --global https.proxy https://127.0.0.1:1080
+## socks5代理
+git config --global http.proxy 'socks5://127.0.0.1:1087'
+git config --global https.proxy 'socks5://127.0.0.1:1087'
+# 查看
+git config --global  --get http.proxy
+git config --global  --get https.proxy
 # 取消代理
 git config --global --unset http.proxy
 git config --global --unset https.proxy

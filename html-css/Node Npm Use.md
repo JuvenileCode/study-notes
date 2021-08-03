@@ -32,6 +32,19 @@ nrm use taobao
 nrm test npm
 ```
 
+**或者设置代理：**
+
+```bash
+# 设置http代理（根据自己软件查找端口）
+npm config set proxy http://127.0.0.1:1089
+npm config set registry https://registry.npmjs.org
+# 取消代理
+npm config delete proxy
+npm config delete https-proxy
+```
+
+
+
 #### Mac安装
 
 **brew直接安装** 
