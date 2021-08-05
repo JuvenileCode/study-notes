@@ -86,5 +86,112 @@
 <span></span>
 ```
 
+### CSS三角
 
+```html
+<style>
+  .box2{
+    width: 0;
+    height: 0;
+    /* 边框全部设置为透明 */
+    border: 10px solid transparent;
+    /* 三角在哪边就在哪边设置颜色 */
+    border-left-color: #00a4ff;
+  }
+</style>
+```
+
+### CSS用户界面样式
+
+**更改用户的鼠标样式**
+
+```html
+<ul>
+    <li style="cursor: default">默认鼠标样式</li>
+    <li style="cursor: pointer">小手样式</li>
+    <li style="cursor: move">移动样式</li>
+    <li style="cursor: text">文本样式</li>
+    <li style="cursor: not-allowed">禁止样式</li>
+</ul>
+```
+
+**表单轮廓**
+
+```css
+input {
+  /*取消轮廓线*/
+  outline: none;
+}
+```
+
+**防止表单拖拽**
+
+```css
+textarea {
+  resize: none;
+}
+```
+
+### vertical-align
+
+`vertical-align`经常用于设置图片或者表单（行内块元素）和文字垂直对齐
+
+`vertical-align` 只对行内元素、表格单元格元素生效：不能用它垂直对齐块级元素
+
+```html
+<style>
+ /* 文字和图片居中对齐 */
+.middle { vertical-align: middle; }
+ /* 解决图片底部默认留白缝隙问题 */
+  img {vertical-align: middle | top |bottom}
+</style>
+<div>An <img class="middle" src="https://mdn.mozillademos.org/files/12245/frame_image.svg" alt="link" width="32" height="32" /> image with a middle alignment.</div>
+```
+
+### 溢出省略号显示
+
+**单行文本溢出省略号**
+
+```html
+<style>
+  .text-hh {
+    width: 150px;
+    height: 60px;
+    background-color: #8ce6b0;
+    /*文字显示不允许换行*/
+    white-space: nowrap;
+    /*超出部分隐藏*/
+    overflow: hidden;
+    /*超出的部分用省略号显示*/
+    text-overflow: ellipsis;
+  }
+</style>
+<div class="text-hh">
+  为什么都说童年是无忧无虑最快乐的？但是童年的时候你自己却只感到作业太多想快点长大
+</div>
+```
+
+**多行文本溢出省略号**
+
+```html
+<style>
+  .text-list-hh {
+    width: 150px;
+    height: 45px;
+    background-color: #8ce6b0;
+
+    /*超出部分隐藏*/
+    overflow: hidden;
+    /*超出的部分用省略号显示*/
+    text-overflow: ellipsis;
+    /* 存在兼容性问题，需要严格控制大小 */
+    display: -webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient: vertical;
+  }
+</style>
+<div class="text-list-hh">
+  为什么都说童年是无忧无虑最快乐的？但是童年的时候你自己却只感到作业太多想快点长大
+</div>
+```
 
