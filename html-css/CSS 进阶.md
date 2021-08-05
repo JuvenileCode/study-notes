@@ -103,7 +103,7 @@
 
 ### CSS用户界面样式
 
-**更改用户的鼠标样式**
+#### 更改用户的鼠标样式
 
 ```html
 <ul>
@@ -115,7 +115,7 @@
 </ul>
 ```
 
-**表单轮廓**
+#### 表单轮廓
 
 ```css
 input {
@@ -124,7 +124,7 @@ input {
 }
 ```
 
-**防止表单拖拽**
+#### 防止表单拖拽
 
 ```css
 textarea {
@@ -150,7 +150,7 @@ textarea {
 
 ### 溢出省略号显示
 
-**单行文本溢出省略号**
+#### 单行文本溢出省略号
 
 ```html
 <style>
@@ -171,7 +171,7 @@ textarea {
 </div>
 ```
 
-**多行文本溢出省略号**
+#### 多行文本溢出省略号
 
 ```html
 <style>
@@ -193,5 +193,141 @@ textarea {
 <div class="text-list-hh">
   为什么都说童年是无忧无虑最快乐的？但是童年的时候你自己却只感到作业太多想快点长大
 </div>
+```
+
+### 常见的布局技巧
+
+#### margin负值的运用
+
+```html
+<style>
+  /*浮动盒子边框下会压住变粗，margin-left:-1px 会盖住*/
+  ul li {
+    float: left;
+    list-style: none;
+    width: 150px;
+    height: 200px;
+    border: 1px solid #00a4ff;
+    margin-left: -1px;
+  }
+  /*鼠标经过边框突出颜色*/
+  ul li:hover {
+    /*盒子没有定位，添加相对定位就好（元素不脱标占有位置）
+    有定位则添加z-index 提高层级*/
+    position: relative;
+    border: 1px solid #dd3f0f;
+  }
+</style>
+<ul>
+    <li>1</li><li>2</li><li>3</li><li>4</li><li>5</li>
+</ul>
+```
+
+#### 文字围绕浮动元素
+
+```html
+<style>
+  /*文字围绕浮动元素*/
+  .box {
+    margin: 10px auto;
+    width: 300px;
+    height: 150px;
+    background-color: #5d9de0;
+    padding: 5px;
+  }
+  .pic {
+    float: left;
+    width: 100px;
+    height: 150px;
+    margin-right: 5px;
+  }
+  .pic img {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+<div class="box">
+    <div class="pic">
+        <img src="img/tb.jpeg" alt="">
+    </div>
+    <p>好消息👌 1 节省时间 2 有助于增强民族自信 制度自信 道路自信👍 欢欣鼓舞起来🔥 晚安 明天快乐</p>
+</div>
+```
+
+#### 行内块的巧妙运用
+
+```html
+<style>
+  /*行内块的巧妙运用*/
+  .inline-block {
+    /*给父盒子添加text-align: center 所有子盒子都会水平居中对齐*/
+    text-align: center;
+  }
+
+  .inline-block a {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    text-align: center;
+    line-height: 36px;
+    text-decoration: none;
+    color: #333
+  }
+</style>
+<div class="inline-block">
+    <a href="#">1</a><a href="#">2</a><a href="#">3</a><a href="#">4</a><a href="#">5</a><a href="#">6</a><a
+        href="#">7</a><a href="#">8</a>
+</div>
+```
+
+#### CSS三角强化
+
+```html
+<style>
+  .price {
+    width: 160px;
+    height: 24px;
+    line-height: 24px;
+    border: 1px solid red;
+    margin: 10px auto;
+  }
+  .new {
+    float: left;
+    position: relative;
+    width: 90px;
+    height: 100%;
+    background-color: red;
+    text-align: center;
+    color: #fff;
+    font-weight: 700;
+  }
+  .new i {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 0;
+    height: 0;
+    /*CSS三角强化 - 直角三角形*/
+    border-color: transparent #fff transparent transparent;
+    border-style: solid;
+    border-width: 24px 10px 0 0;
+  }
+  .old {
+    padding-left: 8px;
+    font-size: 12px;
+    color: gray;
+    text-decoration: line-through;
+  }
+</style>
+<div class="price">
+    <span class="new">
+        ¥1699
+        <i></i>
+    </span>
+    <span class="old">¥3299</span>
+</div>
+<div class="triangle"></div>
 ```
 

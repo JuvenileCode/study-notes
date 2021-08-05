@@ -149,6 +149,7 @@ npm包安装分`本地安装` 和` 全局安装`
 ```bash
 	$ npm ls
 	$ npm ls -g
+	$ npm list --depth=0 -g
 ```
 
 ##### 7. `npm info`查看模块信息
