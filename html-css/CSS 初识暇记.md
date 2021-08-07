@@ -340,3 +340,143 @@
 </ul>
 ```
 
+
+
+
+
+### CSS3新增选择器
+
+[参考](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_Selectors)
+
+#### 属性选择器
+
+可以根据元素特定[属性](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Attribute_selectors)来选择元素；`类选择器、属性选择器、伪类选择器权重都是10`
+
+```html
+<style>
+  /* 必须是input 但是同时具有 value这个属性 选择这个元素  [] */
+  /* input[value] {
+  color:pink;
+  } */
+  /* 只选择 type =text 文本框的input 选取出来 */
+  input[type=text] {
+    color: pink;
+  }
+  /* 选择首先是div 然后 具有class属性 并且属性值 必须是 icon开头的这些元素 */
+  div[class^=icon] {
+    color: red;
+  }
+  section[class$=data] {
+    color: blue;
+  }
+  div.icon1 {
+    color: skyblue;
+  }
+  /* 类选择器和属性选择器 伪类选择器 权重都是 10 */
+</style>
+<!-- 1. 利用属性选择器就可以不用借助于类或者id选择器 -->
+<!-- <input type="text" value="请输入用户名">
+<input type="text"> -->
+<!-- 2. 属性选择器还可以选择属性=值的某些元素 重点务必掌握的 -->
+<input type="text" name="" id="">
+<input type="password" name="" id="">
+<!-- 3. 属性选择器可以选择属性值开头的某些元素 -->
+<div class="icon1">小图标1</div>
+<div class="icon2">小图标2</div>
+<div class="icon3">小图标3</div>
+<div class="icon4">小图标4</div>
+<div>我是打酱油的</div>
+<!-- 4. 属性选择器可以选择属性值结尾的某些元素 -->
+<section class="icon1-data">我是安其拉</section>
+<section class="icon2-data">我是哥斯拉</section>
+<section class="icon3-ico">哪我是谁</section>
+```
+
+#### 结构伪类选择器
+
+主要根据[文档结构](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Pseudo-classes)来选择元素，常用于根据父级选择子元素
+
+```html
+<style>
+  /* 1. 选择ul里面的第一个孩子 小li */
+  ul li:first-child {
+    background-color: pink;
+  }
+  /* 2. 选择ul里面的最后一个孩子 小li */
+  ul li:last-child {
+    background-color: pink;
+  }
+  /* 3. 选择ul里面的第2个孩子 小li  <b>nth-child还能跟公式</b> */
+  ul li:nth-child(2) {
+    background-color: skyblue;
+  }
+  /* 4.把所有的偶数 even的孩子选出来 */
+  ul li:nth-child(even) {
+    background-color: #ccc;
+  }
+  /* 5.把所有的奇数 odd的孩子选出来 */
+  ul li:nth-child(odd) {
+    background-color: gray;
+  }
+  /* 6.从第3个开始选择所有 */
+  ul li:nth-child(n+3) {
+  background-color: pink;
+  }
+   /* 7.选择前3个 */
+  ul li:nth-child(-n+3) {
+    background-color: pink;
+  }
+</style>
+<ul>
+  <li>我是第1个孩子</li>
+  <li>我是第2个孩子</li>
+  <li>我是第3个孩子</li>
+  <li>我是第4个孩子</li>
+  <li>我是第5个孩子</li>
+  <li>我是第6个孩子</li>
+  <li>我是第7个孩子</li>
+  <li>我是第8个孩子</li>
+</ul>
+```
+
+`nth-child(n)` 和 `nth-of-type(n)`	区别：
+
+- section div:nth-child(2)：会把所有元素都排序号，先选择n的序号再看序号前面元素
+- section div:nth-of-type(2)：会把指定的元素(div)排序，然后选择n的序号再看序号前面元素
+
+#### 伪元素选择器
+
+可以利用CSS创建新标签元素
+
+| 选择符    | 简介                                        |
+| --------- | ------------------------------------------- |
+| ::berfore | element::berfore{} 在元素内部的前面插入内容 |
+| ::after   | element::after{} 在元素内部的后面插入内容   |
+
+** `before`和`after`创建一个元素（在文档树中是找不到的），是属于行内元素；必须要有`content	`属性，权重为1**
+
+```html
+<style>
+  div {
+    width: 200px;
+    height: 200px;
+    background-color: pink;
+  }
+  /* div::before 权重是2 */
+  div::before {
+    /* 这个content是必须要写的 */
+    /* display: inline-block; */
+    content: '我';
+    /* width: 30px;
+    height: 40px;
+    background-color: purple; */
+  }
+  div::after {
+    content: '小猪佩奇';
+  }
+</style>
+<div>
+  是
+</div>
+```
+

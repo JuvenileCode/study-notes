@@ -128,7 +128,9 @@ web标准主要位`结构`，`表现`，`行为` ；提倡分离，简单来说�
 
 ### HTML5新特性
 
-#### HTML新增的语义化标签
+#### 语义化标签
+
+![结构图谱](https://raw.githubusercontent.com/JuvenileCode/study-notes/master/image-source/html5-layout.jpeg)
 
 header：头部标签
 
@@ -146,5 +148,44 @@ footer：尾部标签
 
 语义化标准主要针对搜索引擎，移动端比较适用
 
+#### 多媒体标签
 
+[audio](https://www.w3school.com.cn/tags/tag_audio.asp)：音频
+
+[video](https://www.w3school.com.cn/tags/tag_video.asp)：视频  （尽量用MP4格式）
+
+```html
+<audio src="media/music.mp3" autoplay></audio>
+<video width="100%" src="media/mi.mp4" autoplay muted controls loop> </video>
+```
+
+#### input类型
+
+```html
+数量 ( 1 到 5 之间 ): <input type="number" name="quantity" min="1" max="5">
+```
+
+- color	从拾色器中选择一个颜色
+- date    允许你从一个日期选择器选择一个日期
+- datetime    类型允许你选择一个日期（UTC 时间）
+- datetime-local    类型允许你选择一个日期和时间 (无时区)
+- email    mail格式 在提交表单时，会自动验证 email 域的值是否合法有效
+- month    month 类型允许你选择一个月份
+- number  [number 类型用于应该包含数值的输入域](https://www.runoob.com/html/html5-form-input-types.html)
+- range    定义一个不需要非常精确的数值（类似于滑块控制
+- search    search 类型用于搜索域
+- tel    输入电话号码
+- time    time 类型允许你选择一个时间
+- url    用于应该包含 URL 地址的输入域
+- week    允许你选择周和年
+
+#### 表单属性
+
+| 属性         | 值        | 说明                           |
+| ------------ | --------- | :----------------------------- |
+| required     | required  | 必填                           |
+| placeholder  | 提示文本  | 表单提示信息，存在默认值不显示 |
+| autocomplete | off / on  | 之前输入值自动展示             |
+| multiple     | multiple  | 多选文件提交                   |
+| autofocus    | autofocus | 自动聚焦属性                   |
 
