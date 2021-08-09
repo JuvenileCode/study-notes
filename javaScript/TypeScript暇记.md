@@ -169,3 +169,184 @@ let myFavoriteNumber;
 myFavoriteNumber = 'seven';
 myFavoriteNumber = 7;
 ```
+
+
+
+#### 联合数据类型
+
+联合类型（Union Types）表示取值可以为多种类型中的一种
+
+```typescript
+let maxVar: string | boolean | number;
+maxVar = '啦啦啦啦啦';
+console.log(typeof maxVar);
+maxVar = true;
+console.log(typeof maxVar);
+```
+
+当 TypeScript 不确定一个联合类型的变量到底是哪个类型的时候，我们**只能访问此联合类型的所有类型里共有的属性或方法**：
+
+```ts
+function getLength(something: string | number): number {
+    return something.length;
+    //return something.toString();
+}
+// index.ts(2,22): error TS2339: Property 'length' does not exist on type 'string | number'.
+//   Property 'length' does not exist on type 'number'.
+```
+
+联合类型的变量在被赋值的时候，会根据类型推论的规则推断出一个类型：
+
+```ts
+let myFavoriteNumber: string | number;
+myFavoriteNumber = 'seven';
+console.log(myFavoriteNumber.length); // 5
+myFavoriteNumber = 7;
+console.log(myFavoriteNumber.length); // 编译时报错
+```
+
+
+
+#### 对象的类型接口
+
+```typescript
+interface Person {
+    readonly id: number; //只读约束 * 只读的约束存在于第一次给对象赋值的时候，而不是第一次给只读属性赋值的时候
+    name: string;
+    age: number;
+    address?: string;  //可选属性的含义是该属性可以不存在
+
+    [propName: string]: any; //任意的属性 * 定义了任意属性，那么确定属性和可选属性的类型都必须是它的类型的子集
+}
+let tom: Person[] = [{id: 1, name: "Tom", age: 25, isTrue: true}, {id: 2, name: "JasTin", age: 19, address: "湖南长沙"}]
+console.log(tom);
+```
+
+
+
+#### 数组的类型
+
+```typescript
+// 初始定义
+let intArray: number[] = [1, 2, 3, 1, 4, 5];
+intArray.push(9);
+intArray.pop();
+// 带泛型定义
+let fibonacci: Array<string> = ['a', 'b', 'c', 'd', 'e'];
+```
+
+
+
+#### 函数的类型
+
+在 JavaScript 中，有两种常见的定义函数的方式——函数声明（Function Declaration）和函数表达式（Function Expression）
+
+```typescript
+// 函数声明要进行类型约束 - 可选参数必须接在必需参数后面
+function sub(x: number, y: number, z?: number): number {
+    if (z) {
+        return x - y + z;
+    }
+    return x - y;
+}
+
+// 函数表达式
+/*let mySum = function (x: number, y: number): number {
+    return x + y;
+};*/
+// 参数默认值
+let mySum: (x: number, y: number) => number = function (x: number, y: number, z: number = 9): number {
+    return x + y + z;
+};
+
+// 剩余参数
+function push(array: any[], ...items: any[]) :any[]{
+    items.forEach(function (item) {
+        array.push(item);
+    });
+    return array;
+}
+
+// 函数重载
+function reverse(x: number | string): number | string {
+    if (typeof x === 'number') {
+        return Number(x.toString().split('').reverse().join(''));
+    } else if (typeof x === 'string') {
+        return x.split('').reverse().join('');
+    }
+}
+
+function reverseRepeat(x: number): number;
+function reverseRepeat(x: string): string;
+function reverseRepeat(x: number | string): number | string | void {
+    if (typeof x === 'number') {
+        return Number(x.toString().split('').reverse().join(''));
+    } else if (typeof x === 'string') {
+        return x.split('').reverse().join('');
+    }
+}
+```
+
+
+
+#### 类型断言
+
+类型断言（Type Assertion）可以用来手动指定一个值的类型
+
+**用途：**
+
+**将一个联合类型断言为其中一个类型**
+
+```typescript
+function isFish(animal: string | Date): number | Date | string {
+    if (typeof (animal as Date) === 'object') {
+        console.log(typeof animal);
+        return (animal as Date).getDate();
+    }
+    return animal;
+}
+```
+
+**将一个父类断言为具体的子类**
+
+```typescript
+interface ApiError extends Error {
+    code: number;
+}
+interface HttpError extends Error {
+    statusCode: number;
+}
+
+function isApiError(error: Error) {
+    if (typeof (error as ApiError).code === 'number') {
+        return true;
+    }
+    return false;
+}
+```
+
+**将任何一个类型断言为`any`**
+
+需要注意的是，将一个变量断言为 `any` 可以说是解决 TypeScript 中类型问题的最后一个手段
+
+**它极有可能掩盖了真正的类型错误，所以如果不是非常确定，就不要使用 `as any`**
+
+```ts
+window.foo = 1;
+// index.ts:1:8 - error TS2339: 
+(window as any).foo = 1;
+```
+
+**将 `any` 断言为一个具体的类型**
+
+```ts
+function getCacheData(key: string): any {
+    return (window as any).cache[key];
+}
+interface Cat {
+    name: string;
+    run(): void;
+}
+const tom = getCacheData('tom') as Cat;
+tom.run();
+```
