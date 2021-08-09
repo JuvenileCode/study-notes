@@ -165,6 +165,118 @@ border设置元素边框，边框粗细、样式、颜色
 </style>
 ```
 
+### CSS3新特性
+
+#### CSS3盒子模型
+
+CSS3中可以通过`box-sizing`来指定盒子模型的大小计算方式
+
+1. `box-sizing:content-box` 盒子大小为width+padding+border
+2. `box-sizing:border-box` 盒子大小为width
+
+```html
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  div {
+    width: 200px;
+    height: 200px;
+    background-color: pink;
+    border: 20px solid red;
+    padding: 15px;
+    box-sizing: content-box;
+  }
+  p {
+    width: 200px;
+    height: 200px;
+    background-color: pink;
+    border: 20px solid red;
+    padding: 15px;
+    /* css3 盒子模型  盒子最终的大小就是 width  200 的大小 */
+    box-sizing: border-box;
+  }
+</style>
+<div> one div</div>
+<p> one p </p>
+```
+
+#### CSS3滤镜filter
+
+filter CSS属性（filter：函数）将模糊或颜色偏移等图形效果应用于元素
+
+```html
+<style>
+  img {
+    /* blur是一个函数 小括号里面数值越大，图片越模糊 注意数值要加px单位 */
+    filter: blur(15px);
+  }
+  img:hover {
+    filter: blur(0);
+  }
+</style>
+<img src="ima/video.jpeg" alt="">
+```
+
+#### CSS3 calc函数
+
+calc()`width:calc(100%-80px)`此CSS函数让你在声明CSS属性值时执行一些计算
+
+ ```html
+ <style>
+   .father {
+     width: 300px;
+     height: 200px;
+     background-color: pink;
+   }
+   .son {
+     /* width: 150px; */
+     /* width: calc(150px + 30px); */
+     width: calc(100% - 30px);
+     height: 30px;
+     background-color: skyblue;
+   }
+ </style>
+ <!-- 需求我们的子盒子宽度永远比父盒子小30像素 -->
+ <div class="father">
+   <div class="son"></div>
+ </div>
+ ```
+
+#### CSS3过度
+
+过度`transition`是从一个状态渐渐的过渡到另外一个状态，搭配`:hover`使用
+
+> transition:属性 花费时间 运动曲线 何时开始
+
+```html
+<style>
+  div {
+    width: 200px;
+    height: 100px;
+    background-color: pink;
+    /* transition: 变化的属性 花费时间 运动曲线 何时开始; */
+    /* transition: width .5s ease 0s, height .5s ease 1s; */
+    /* 如果想要写多个属性，利用逗号进行分割 */
+    /* transition: width .5s, height .5s; */
+    /* 如果想要多个属性都变化，属性写all就可以了 */
+    /* transition: height .5s ease 1s; */
+    /* 谁做过渡，给谁加 */
+    transition: all 0.5s;
+  }
+  div:hover {
+    width: 400px;
+    height: 200px;
+    background-color: skyblue;
+  }
+</style>
+<div> </div>
+```
+
+
+
 ### 浮动
 
 #### 介绍
