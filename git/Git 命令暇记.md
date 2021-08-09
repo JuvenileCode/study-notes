@@ -41,6 +41,19 @@ git remote add origin "链接地址"
 git remote add origin  http://39.101.200.176:8090/businessPlatform/uqian-data-model.git
 ```
 
+### 拉取远程分支到比本地
+
+```bash
+# 初始化本地文件夹
+git init
+# 建立连接
+git remote add origin "连接地址"
+# 把远程分支拉到本地
+git fetch origin develop(远程分支名称)
+# 在本地创建分支dev并切换到该分支
+git checkout -b dev(本地分支名称) origin/develop(远程分支名称)
+```
+
 ### 远程仓库push和pull
 
 ```shell
