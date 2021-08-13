@@ -4,6 +4,10 @@
 
 ```html
 <div id="text"></div>
+
+<script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
 <script type="text/babel" >
   const data=['JAVA','ReactJs',"GoLang"]
  /*创建虚拟DOM*/
@@ -11,7 +15,7 @@
   const VDOM = (
   <div>
     <h2 className="title" id={myId.toLowerCase()}>
-    	<span style{{colro:'red'}}> {myId.toLowerCase()} </span>
+    	<span style={{colro:'red'}}> {myId.toLowerCase()} </span>
   	</h2>
   	<ul>
   		{
