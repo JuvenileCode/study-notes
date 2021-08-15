@@ -73,3 +73,14 @@ git pull --rebase origin master
 
 **core.quotepath没有设置好** : `git config --global core.quotepath false`
 
+
+
+### GitHub 取消账号和密码登录
+
+1.  GitHub 配置 SSH 免密登录
+2. GitHub token
+
+[如何配置SSH](https://www.cnblogs.com/zhoulujun/p/15141608.html)
+
+切换仓库路径：`git remote set-url origin git@github.com:username/repo.git`
+
