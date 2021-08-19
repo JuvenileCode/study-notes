@@ -257,9 +257,71 @@ ReactDOM.render(<ClassComponent/>, document.getElementById("test"));
 
 ### 受控&非受控组件
 
+#### 非受控组件
+
+如果一个表单组件没有 value props(单选按钮和复选框对应的是 checked prop) 时，就可以称为非受控组件；比如用`ref`。
+
+```typescript
+<script type="text/babel">
+    class Login extends React.Component {
+
+        submitCall = (event) => {
+            /*阻止表单提交*/
+            event.preventDefault();
+            alert(this.username.value)
+        }
+
+        render() {
+            return (
+                <form action="https://www.baidu.com" onSubmit={this.submitCall}>
+                    USERNAME: <input ref={c => this.username = c} type="text" name="username"/>
+                    PASSWORD: <input type="password" name="password"/>
+                    <button>Login</button>
+                </form>
+            );
+        }
+    }
+
+    ReactDOM.render(<Login/>, document.getElementById('test'))
+</script>
+```
+
 #### 受控组件
 
+在 React 中，表单元素通过组件的 state 属性来自己维护 state（vue中叫双向绑定，react没有双向绑定），并根据用户输入调用[setState()](https://link.segmentfault.com/?url=https%3A%2F%2Fzh-hans.reactjs.org%2Fdocs%2Freact-component.html%23setstate)来进行数据更新，使 React 的 state 成为“唯一数据源”，被 React 以这种方式控制取值的表单输入元素就叫做“受控组件”
 
+```typescript
+<script type="text/babel">
+    class Login extends React.Component {
+        // 初始化状态
+        state = {
+            username:'',
+            password:''
+        }
 
-#### 非受控组件
+        nameChange = (event) => {
+            console.log(event.target.value);
+            this.setState({username:event.target.value});
+        }
+
+        submitCall = (event) => {
+            /*阻止表单提交*/
+            event.preventDefault();
+            console.log(this.state.username);
+        }
+
+        render() {
+            return (
+                <form action="https://www.baidu.com" onSubmit={this.submitCall}>
+                    USERNAME: <input onChange={this.nameChange} type="text" name="username"/>
+                    PASSWORD: <input type="password" name="password"/>
+                    <button>Login</button>
+                </form>
+            );
+        }
+    }
+
+    ReactDOM.render(<Login/>, document.getElementById('test'))
+</script>
+```
 
