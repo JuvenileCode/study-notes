@@ -1,3 +1,5 @@
+
+
 ## ReactJs 初识
 
 ### JSX语法规则
@@ -379,4 +381,124 @@ ReactDOM.render(<ClassComponent/>, document.getElementById("test"));
 ### React生命周期
 
 #### 旧版本
+
+![react-old-lief](https://raw.githubusercontent.com/JuvenileCode/study-notes/master/image-source/old_react_life.png)
+
+1. **初始化阶段：由ReactDOM.render()触发 --- 初次渲染**
+   1. constructor()
+   2. componentWillMount()
+   3. render()
+   4. componentDidMount()
+2. **更新阶段：由组件内部this.setState()或父组件重新render触发**
+   1. shouldComponentUpdate()
+   2. componentWillUpdate()
+   3. render()
+   4. componentDidUpdate()
+3. **卸载组件：由ReactDom.unmountComponentAtNode()触发**
+   1. componentWillUnmount()
+
+```javascript
+<script type="text/babel">
+  class Life extends React.Component {
+
+    constructor(props) {
+      console.log('[Current sum] constructor 构造器调用');
+      super(props);
+      this.state = {count: 0}
+    }
+
+    sum = () => {
+      let {count} = this.state;
+      count += 1;
+      this.setState({count})
+    }
+
+    deleteComponent = () => {
+      // 卸载组件
+      ReactDOM.unmountComponentAtNode(document.getElementById('life'))
+    }
+
+    forciblyUpdate = () => {
+      // 强制更新
+      this.forceUpdate();
+    }
+
+    componentWillMount() {
+      console.log('[Current sum] componentWillMount 组件将要挂载调用');
+    }
+
+componentDidMount() {
+  console.log('[Current sum] componentDidMount 组件完成挂载调用');
+}
+
+componentWillUnmount() {
+  console.log('[Current sum] componentWillUnmount 卸载组件调用');
+}
+
+shouldComponentUpdate() {
+  console.log('[Current sum] shouldComponentUpdate 应用组件更新策略');
+  // true 才会继续向下走
+  return true;
+}
+
+componentWillUpdate() {
+  console.log('[Current sum] componentWillUpdate 组件将要更新');
+}
+
+componentDidUpdate() {
+  console.log('[Current sum] componentDidUpdate 组件更新完成');
+}
+
+render() {
+  console.log('[Current sum] render 组件挂载调用');
+  let {count} = this.state;
+  return (
+    <div>
+    <h2> Current sum : {count}</h2>
+<button onClick={this.sum}> onClick +1</button>
+<button onClick={this.deleteComponent}> delete Component</button>
+<button onClick={this.forciblyUpdate}>forcibly Update</button>
+</div>
+)
+}
+}
+
+class One extends React.Component{
+  state = {other:'no'}
+
+onClick = ()=>{
+  this.setState({other: this.state.other += '1'})
+}
+
+render(){
+  return (
+    <div>
+    <h4> This is ONE Component</h4>
+    <button onClick={this.onClick}> onClick</button>
+<Two other={this.state.other}/>
+  </div>
+)
+}
+}
+
+class Two extends React.Component{
+  componentWillReceiveProps(props){
+    console.log('[Two] componentWillReceiveProps 接收父组件props调用(初始化调用)',props);
+  }
+  render(){
+    return (
+      <div>
+      <h4> This is TWO Component</h4>
+      <h5> from ONE Component value: {this.props.other}</h5>
+</div>
+)
+}
+}
+
+// ReactDOM.render(<Life/>, document.getElementById('life'))
+ReactDOM.render(<One/>, document.getElementById('life'))
+  </script>
+```
+
+
 
