@@ -325,3 +325,58 @@ ReactDOM.render(<ClassComponent/>, document.getElementById("test"));
 </script>
 ```
 
+### 高阶函数-柯里化
+
+**高阶函数（满足任意一个规范）：**
+
+- 若A函数，接收的参数是一个函数，那么A就可以称为高阶函数
+- 若A函数，调用的返回值依然是一个函数，那么A也可以称为高阶函数
+
+**函数的柯里化：**通过函数调用继续返回函数的方式，实现多次接收参数最后统一处理函数的编码形式
+
+```javascript
+<script type="text/babel">
+    class Login extends React.Component {
+        // 初始化状态
+        state = {
+            username: '',
+            password: ''
+        }
+
+        // 函数柯里化写法
+        saveFormData = (dataName) => {
+            return (event) => {
+                this.setState({[dataName]: event.target.value});
+            }
+        }
+
+        // 不用函数柯里化实现
+        ordinary = (key, value) => {
+            this.setState({[key]: value});
+        }
+
+        submitCall = (event) => {
+            /*阻止表单提交*/
+            event.preventDefault();
+            console.log(this.state.username);
+        }
+
+        render() {
+            return (
+                <form action="https://www.baidu.com" onSubmit={this.submitCall}>
+                    USERNAME: <input onChange={this.saveFormData('username')} type="text" name="username"/>
+                    PASSWORD: <input onChange={(event) => {this.ordinary('password',event.target.value)}} type="password" name="password"/>
+                    <button>Login</button>
+                </form>
+            );
+        }
+    }
+
+    ReactDOM.render(<Login/>, document.getElementById('test'))
+</script>
+```
+
+### React生命周期
+
+#### 旧版本
+
