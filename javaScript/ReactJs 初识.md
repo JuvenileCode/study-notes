@@ -502,3 +502,5 @@ ReactDOM.render(<One/>, document.getElementById('life'))
 
 #### 新版本
 
+![new_react_life](https://raw.githubusercontent.com/JuvenileCode/study-notes/master/image-source/new_react_life.png)
+
