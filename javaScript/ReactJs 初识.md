@@ -504,3 +504,34 @@ ReactDOM.render(<One/>, document.getElementById('life'))
 
 ![new_react_life](https://raw.githubusercontent.com/JuvenileCode/study-notes/master/image-source/new_react_life.png)
 
+1. **初始化阶段：由ReactDOM.render()触发 --- 初次渲染**
+   1. constructor()
+   2. getDerivedStateFromProps()
+   3. render()
+   4. componentDidMount()
+2. **更新阶段：由组件内部this.setState()或父组件重新render触发**
+   1. getDerivedStateFromProps()
+   2. shouldComponentUpdate()
+   3. render()
+   4. getSnapshotBeforeUpdate()
+   5. componentDidUpdate()
+3. **卸载组件：由ReactDom.unmountComponentAtNode()触发**
+   1. componentWillUnmount()
+
+#### 新旧生命周期函数对比
+
+**重要函数**
+
+- render：初始化渲染或更新渲染调用
+- componentDidMount：开启监听，发送ajax请求
+- componentWillUnmount：收尾，清理逻辑
+
+**即将废弃函数**
+
+- componentWillMount
+- componentWillReceiveProps
+- componentWillUpdate
+
+现在使用会出现警告，使用需要加上`UNSAFE_`  前缀
+
+### Diffing算法
