@@ -595,3 +595,11 @@ ReactDOM.render(<One/>, document.getElementById('life'))
 </script>
 ```
 
+### 脚手架
+
+1. **全局安装：** `npm i create-react-app -g`
+2. **却换到创建项目目录：**`create-react-app test-react-pro`
+3. **进入项目文件夹启动项目：**`npm start`
+
+[目录结构说明](http://www.html.cn/create-react-app/docs/folder-structure/)
+
