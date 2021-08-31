@@ -11,8 +11,6 @@
 
 [参考源一](https://www.jianshu.com/p/ea17fa167585)
 
-[参考源二](https://cloud.tencent.com/developer/article/1602855)
-
 #### 基础数据类型
 
 **布尔型、整型、浮点型、复数型、字符型、字符串型、错误类型**
@@ -147,6 +145,27 @@ func main() {
 ```
 
 ##### 字符串型
+
+字符串以原生数据类型，出现内部实现使用`UTF-8`编码
+
+```go
+func main() {
+    var str1 string // 默认值为空字符串 ""
+    str1 = `hello world`
+    str2 := "你好世界"
+
+    str := str1 + " " + str2 // 字符串连接
+    fmt.Println(str1)
+    fmt.Println(str2)
+    fmt.Println(str) // 输出：hello world 你好世界
+    // 遍历字符串
+    l := len(str)
+    for i := 0; i < l; i++ {
+        chr := str[i]
+        fmt.Println(i, chr) // 输出字符对应的编码数字
+    }
+}
+```
 
 
 
