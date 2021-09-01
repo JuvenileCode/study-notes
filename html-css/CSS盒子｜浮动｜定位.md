@@ -275,6 +275,22 @@ calc()`width:calc(100%-80px)`此CSS函数让你在声明CSS属性值时执行一
 <div> </div>
 ```
 
+#### 2D转换translate
+
+```css
+<style>
+/*移动盒子的位置： 定位 ｜ 盒子的外边距 ｜ 2d转换移动*/
+.tr {
+  width: 200px;
+  height: 200px;
+  background-color: blue;
+  transform: translate(100px, 100px);
+}
+</style>
+```
+
+**translate沿着X和Y轴移动，最大优点是不会影响其它元素位置（对行内标签没效果）**
+
 
 
 ### 浮动
