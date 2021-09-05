@@ -245,7 +245,7 @@ calc()`width:calc(100%-80px)`此CSS函数让你在声明CSS属性值时执行一
  </div>
  ```
 
-#### CSS3过度
+#### CSS3过度transition
 
 过度`transition`是从一个状态渐渐的过渡到另外一个状态，搭配`:hover`使用
 
@@ -275,7 +275,9 @@ calc()`width:calc(100%-80px)`此CSS函数让你在声明CSS属性值时执行一
 <div> </div>
 ```
 
-#### 2D转换translate
+#### transform
+
+##### 2D转换transform
 
 ```css
 <style>
@@ -285,11 +287,58 @@ calc()`width:calc(100%-80px)`此CSS函数让你在声明CSS属性值时执行一
   height: 200px;
   background-color: blue;
   transform: translate(100px, 100px);
+  /* 旋转 */
+  transform: rotate(45deg);
 }
 </style>
 ```
 
-**translate沿着X和Y轴移动，最大优点是不会影响其它元素位置（对行内标签没效果）**
+translate沿着X和Y轴移动，最大优点是不会影响其它元素位置（对行内标签没效果）
+
+**旋转:**
+
+```css
+.rotate-test {
+  margin-top: 30px;
+  width: 100px;
+  height: 100px;
+  background-color: #d2dddd;
+  /*border-radius: 50%;
+  border: 5px solid cornflowerblue;*/
+  transition: all 3s;
+}
+.rotate-test:hover {
+  transform: rotate(360deg);
+}
+```
+
+##### 2D转换translate-origin
+
+可以设置元素转换的中心点`transform-origin: x y`
+
+```css
+/* 可以跟方位名词,也可以是px像素单位 */
+tranform-origin: left bottom;
+```
+
+##### 2D转换缩放scale
+
+对比`widht | heigth`：不会影响其它盒子，可以设置缩放中心点
+
+```css
+transform:scale(x,y) /*x,y是倍树(<1是缩小｜>1是放大) 不带单位*/
+.scale-test{
+  width: 200px;
+  height: 200px;
+  background-color: #2baee9;
+  transition: all 1s;
+}
+.scale-test:hover{
+  transform: scale(0.5,0.5);
+}
+```
+
+#### CSS3动画
 
 
 
