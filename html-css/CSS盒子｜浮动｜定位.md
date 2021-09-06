@@ -340,6 +340,48 @@ transform:scale(x,y) /*x,y是倍树(<1是缩小｜>1是放大) 不带单位*/
 
 #### CSS3动画
 
+制作动画：1. 定义动画   2. 调用
+
+**动画序列**
+
+- 0%是动画的开始，100%是动画的完成
+- 在`@keyframes`中规定某项CSS样式，可以改变任意多样式任意多次数
+- 请用百分比来规定变化发生的时间，或用关键词`from`和`to`等同于0%和100%
+
+```css
+/*定义动画*/
+@keyframes move-all {
+  /*多个状态的变化*/
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(900px, 0);
+  }
+  50% {
+    transform: translate(900px, 300px);
+  }
+  75% {
+    transform: translate(0, 300px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+/*使用动画*/
+.animation-2 {
+  width: 150px;
+  height: 150px;
+  background-color: #589f88;
+  /*调用自定义动画*/
+  animation-name: move-all;
+  /*持续时间*/
+  animation-duration: 3s;
+  /*动画重复次数 infinite(无限)*/
+  animation-iteration-count: 3;
+}
+```
+
 
 
 ### 浮动
