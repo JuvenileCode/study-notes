@@ -603,3 +603,39 @@ ReactDOM.render(<One/>, document.getElementById('life'))
 
 [目录结构说明](http://www.html.cn/create-react-app/docs/folder-structure/)
 
+
+
+### 组件通信(数据传递)
+
+#### 父=>子组件
+
+父组件通过props把数据传给子组件，子组件通过`this.props`
+
+```jsx
+// 父组件直接传递
+<List todos={todos}/>
+// 子组件通过props接收
+const {todos} = this.props
+```
+
+context对于解决react组件层级很深的props传递很有效，但也不应该被滥用
+
+#### 子=>父组件
+
+父组件定义回调函数props把数据传给子组件
+
+```jsx
+// 父组件 定义回调函数
+deleteTodo = (id) => {
+  const {todos} = this.state
+  const newTodos = todos.filter(todo => {
+    return todo.id !== id
+  })
+  this.setState({todos: newTodos});
+}
+// 通过props传递给子组件
+<List deleteTodo={this.deleteTodo}/>
+// 子组件使用
+this.props.deleteTodo(id)
+```
+
