@@ -639,3 +639,27 @@ deleteTodo = (id) => {
 this.props.deleteTodo(id)
 ```
 
+#### PubsubJs 消息队列通信
+
+安装`npm i pubsub-js`
+
+```jsx
+// 导入包
+import MessageQueue from 'pubsub-js';
+//订阅共同的消息名
+
+// 组件挂载页面后订阅消息
+componentDidMount() {
+  this.token = MessageQueue.subscribe('searchUser', (_, data) => {
+    this.setState({...data})
+  });
+}
+// 卸载组件取消消息订阅
+componentWillUnmount() {
+  MessageQueue.unsubscribe(this.token)
+}
+
+//发布消息
+MessageQueue.publish('searchUser',{isFirst: false, isLoading: true});
+```
+
