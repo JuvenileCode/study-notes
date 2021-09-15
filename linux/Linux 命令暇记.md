@@ -1,8 +1,26 @@
 ## Linux 命令暇记
 
-### 查找文件夹
+### 查找
 
-> `find / -name 'rocket*' -type d`
+#### 查看
+
+```shell
+# 查看所有及隐藏文件
+ls -al
+# 查看文件大小
+ls -lh
+```
+
+#### 搜索
+
+[更多参考指南](https://www.cnblogs.com/wanqieddy/archive/2011/06/09/2076785.html)
+
+```shell
+# 搜索文件夹
+find / -name 'rocket*' -type d
+# 搜索当前目录义april开头的文件
+find   -name april*
+```
 
 ### 输出当前用户环境变量
 > `export` 或查询具体某个属性 `export $JAVA_HOME`
