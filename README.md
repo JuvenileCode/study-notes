@@ -42,3 +42,4 @@
 
 - [homebrew使用记录](https://github.com/JuvenileCode/study-notes/blob/master/%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/homebrew%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95.md)
 - [iterm2 快捷键记录](https://github.com/JuvenileCode/study-notes/blob/master/%E8%BD%AF%E4%BB%B6%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/iterm2%20%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AE%B0%E5%BD%95.md)
+- 
