@@ -35,6 +35,12 @@ curl http://myip.ipip.net/
    > 通过brew安装的文件会自动设置环境变量，所以不用担心命令行不能启动的问题。
    >  比如安装好了`gradle`，即可运行` gradle -v`
 
+   ```shell
+   # 例如：安装tree
+   brew install tree
+   # 查看目录树结构 (-C 用色彩显示不同文件，-N解决乱码)
+   tree -C -N
+
 2. 升级软件
 
    ```shell

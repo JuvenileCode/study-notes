@@ -767,3 +767,15 @@ MessageQueue.publish('searchUser',{isFirst: false, isLoading: true});
 > 注册路由(无需声明，正常注册即可)：`<Route path="/demo/test" component={Test}/>`
 > 接收参数：this.props.location.state
 > 备注：刷新也可以保留住参数
+
+#### 编程式路由导航
+
+```jsx
+//借助this.prosp.history对象上的API对操作路由跳转、前进、后退
+  -this.prosp.history.push()
+  -this.prosp.history.replace()
+  -this.prosp.history.goBack()
+  -this.prosp.history.goForward()
+  -this.prosp.history.go()
+```
+
