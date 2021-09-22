@@ -30,3 +30,25 @@ background-size: cover;
 background-size: contain;
 ```
 
+### CSS初始化
+
+移动端CSS初始化推荐使用[normalize.css](https://necolas.github.io/normalize.css/8.0.1/normalize.css)
+
+**css3盒子模型及一些样式：**
+
+```css
+/* 传统盒子模型会 padding 和 border 会撑大盒子*/
+box-sizing: content-box;
+```
+
+```css
+/* css3(box-sizing: border-box) padding 和 border 不会再撑大盒子了 */
+box-sizing: border-box;
+/* 清除点击高亮，设置透明*/
+a {-webkit-tap-highlight-color: transparent;}
+/* 加上这个属性才能给按钮和输入框自定义样式 */
+input {-webkit-appearance: none;}
+/* 禁用长按页面时的弹出菜单*/
+img,a{-webkit-touch-callout: none;}
+```
+
