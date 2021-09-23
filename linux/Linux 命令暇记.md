@@ -122,6 +122,8 @@ cp -a contents-a contents-b
 touch a.log
 ```
 
+
+
 ### 查看文件
 
 #### cat & nl打印
@@ -163,20 +165,105 @@ N：反向重复前一个搜索（与 / 或 ? 有关）
 
 [pageup]：  向上翻动一页
 
+#### head & tail
+
+head从开头查看文件
+
+```shell
+# 显示文件的前5行
+head -n 5 log2014.log
+# 输出文件除了最后n行的全部内容
+head -n -6 log2014.log
+```
+
+tail从文件尾部查看
+
+```shell
+# 实时显示日志最新内容
+tail -f app.log
+# 显示文件最后5行内容
+tail -n 5 app.log 
+```
+
+
+
 ### 搜索查找
 
-#### find
+#### which & whereis
+
+which在PATH变量指定的路径中，搜索某个系统命令的位置
+
+```shell
+# 查找arthas是否安装
+which arthas
+```
+
+**whereis**命令只能用于程序名的搜索，而且只搜索二进制文件（参数-b）、man说明文件（参数-m）和源代码文件（参数-s）
+
+```shell
+whereis svn
+# svn: /usr/bin/svn /usr/local/svn /usr/share/man/man1/svn.1.gz
+```
+
+#### locate
+
+locate命令用于查找文件，它需要一个数据库，数据库由updatedb程序来更新，updatedb是由cron daemon周期性建立
+
+```shell
+# 搜索etc目录下，所有以m开头的文件
+locate /etc/m
+```
+
+#### *find
 
 [更多参考指南](https://www.cnblogs.com/wanqieddy/archive/2011/06/09/2076785.html)
 
 ```shell
-# 搜索文件夹
+# 搜索文件夹(/ 代表根目录)
 find / -name 'rocket*' -type d
-# 搜索当前目录义april开头的文件
-find   -name april*
+# 搜索当前目录义april开头的文件(.代表当前目录)
+find .  -name april*
+# 查找/opt/soft/test/目录下 权限为 777的文件
+find /opt/soft/test/ -perm 777
+# 查找当前目录大于1K的文件
+find . -size +1000c -print
+
 ```
 
+**find 之 exec(-exec 参数后面跟的是command命令)**
+
+ exec选项后面跟随着所要执行的命令或脚本，然后是一对儿{ }，一个空格和一个\，最后是一个分号（ ` -exec ls -l {} \;`）
+
+```shell
+# find命令匹配到了当前目录下的'*.log'，并在-exec选项中使用ls -l命令将它们列出
+find . -name '*.log' -type f -exec ls -l {} \;
+# -exec中使用grep命令；find命令首先匹配所有文件名为“ passwd*”的文件,然后执行grep命令看看在这些文件中是否存在一个root用户
+find /etc -name "passwd*" -exec grep "root" {} \;
+# 用exec选项执行cp命令  
+find . -name "*.log" -exec cp {} test3 \;
+# 目录中查找更改时间在n日以前的文件并删除它们，在删除之前先给出提示
+find . -name "*.log" -mtime +5 -ok rm {} \;
+# 查找避开多个目录
+find test \( -path test/test4 -o -path test/test3 \) -prune -o -print
+```
+
+**find 之 xargs**
+
+ find命令的-exec有处理长度限制，而sxargs命令则只有一个进程命令分批处理
+
+```shell
+# 查找系统中的每一个普通文件，然后使用xargs命令来测试它们分别属于哪类文件
+find . -type f -print | xargs file
+# 在当前目录下查找所有用户具有读、写和执行权限的文件，并收回相应的写权限
+find . -perm -7 -print | xargs chmod o-w
+# 用grep命令在当前目录下的所有普通文件中搜索hostnames这个词
+find . -name \* -type f -print | xargs grep "hostnames"
+```
+
+
+
 ### 输出当前用户环境变量
+
 > `export` 或查询具体某个属性 `export $JAVA_HOME`
 >
 > 修改
