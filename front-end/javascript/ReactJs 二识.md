@@ -32,3 +32,25 @@
 				(2).如果新状态依赖于原状态 ===> 使用函数方式
 				(3).如果需要在setState()执行后获取最新的状态数据, 要在第二个callback函数中读取
 
+### LazyLoad
+
+**懒加载：一般用于路由组件**
+
+1.通过React的lazy函数配合import()函数动态加载路由组件 ===> 路由组件代码会被分开打包
+
+```javascript
+ const Login = lazy(()=>import('@/pages/Login'))
+```
+
+2.通过`<Suspense>`指定在加载得到路由打包文件前显示一个自定义loading界面
+
+```javascript
+//直接引入antd Spin加载组件 <Suspense fallback={<Spin/>}>
+<Suspense fallback={<h1>loading.....</h1>}>
+    <Switch>
+        <Route path="/xxx" component={Xxxx}/>
+        <Redirect to="/login"/>
+    </Switch>
+</Suspense>
+```
+
