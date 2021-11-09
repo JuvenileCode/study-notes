@@ -37,6 +37,8 @@ docker run # docker run相当于 /createthen 和 /start 命令结合 （新建�
 
 ### 常用命令
 
+[命令参考链接](https://cloud.tencent.com/developer/article/1772136)
+
 #### 服务
 
 ```bash
