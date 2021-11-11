@@ -100,6 +100,8 @@ docker volume inspect has-name-nginx
 
 `tmpfs mount` 适合存储临时文件，存宿主机内存中。不可多容器共享
 
+
+
 ### 常用命令
 
 [命令参考链接](https://cloud.tencent.com/developer/article/1772136)
@@ -217,3 +219,22 @@ docker build -t testName:v1Version
 docker run -p 8080:8080 --name test-hello testName:v1Version
 ```
 
+### 网络通信
+
+[参考资料一](https://www.cnblogs.com/mrhelloworld/p/docker11.html)
+
+#### bridge
+
+**bridge模式，--net=bridge(默认)**，为每一个容器分配、设置 IP 等，并将容器连接到一个 `docker0` 虚拟网桥，默认为该模式。
+
+#### host
+
+**host模式，--net=host**，这个模式下创建出来的容器，直接使用容器宿主机的网络命名空间。将不拥有自己独立的Network Namespace，即没有独立的网络环境。它使用宿主机的ip和端口。
+
+#### none
+
+**none模式，--net=none**，容器有独立的 Network namespace，但并没有对其进行任何网络设置，如分配 veth pair 和网桥连接，IP 等。
+
+#### container
+
+新创建的容器不会创建自己的网卡和配置自己的 IP，而是和一个指定的容器共享 IP、端口范围等。
