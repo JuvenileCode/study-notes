@@ -52,3 +52,22 @@ input {-webkit-appearance: none;}
 img,a{-webkit-touch-callout: none;}
 ```
 
+### flex布局
+
+**flex意为弹性布局，任何一个容器都可以指定flex布局。**
+
+- 父盒子设为flex布局后，子元素的float,clear和vertical-align属性失效
+- 采用flex布局的元素，称为flex容器；它所有子元素自动成为容器成员
+- flex布局分为主轴和侧轴（行和列，x轴和y轴）两个方向
+
+#### Flex布局父项常见属性
+
+```
+flex-direction: 设置主轴方向
+justify-content: 设置主轴上的子元素排列方式
+flex-wrap: 设置子元素是否换行
+align-content: 设置侧轴上的子元素的排列方式（多行）
+align-items: 设置侧轴上的子元素排列方式（单行）
+flex-flow: 复合属性,类同时设置flex-direction和flex-wrap
+```
+
