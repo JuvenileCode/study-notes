@@ -65,9 +65,35 @@ img,a{-webkit-touch-callout: none;}
 ```
 flex-direction: 设置主轴方向
 justify-content: 设置主轴上的子元素排列方式
-flex-wrap: 设置子元素是否换行
-align-content: 设置侧轴上的子元素的排列方式（多行）
+flex-wrap: 设置子元素是否换行 (flex布局默认不换行)
+align-content: 设置侧轴上的子元素出现换行的排列方式（多行）
 align-items: 设置侧轴上的子元素排列方式（单行）
 flex-flow: 复合属性,类同时设置flex-direction和flex-wrap
+```
+**示例**
+
+```css
+div {
+  /*给父盒子添加flex*/
+  display: flex;
+  /*默认主轴是X轴方向, 可以忽略*/
+  flex-direction: row;
+  /*设置主轴上子元素排列方式*/
+  justify-content: center;
+  /*设置侧轴子元素排列方式 （justify-content: center + align-items:center 水平且垂直居中）*/
+  align-items:center;
+  /*flex布局默认不换行*/
+  flex-wrap: wrap;
+  /*设置主轴方向和换行 简写*/
+  flex-flow: column wrap;
+}
+```
+
+#### Flex布局子项常见属性
+
+```
+flex 定义子项目分配剩余空间
+align-self 子项自己在侧轴的排列方式
+order 子项排列的前后顺序
 ```
 
