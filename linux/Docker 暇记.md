@@ -59,7 +59,20 @@ docker run -d --name nginx -p 80:80 [镜像ID]
 docker run -d -p 8080:80 --name nginx -v D:\WebStorm\project\react-stagging\build:/usr/share/nginx/html nginx
 ```
 
+#### Mysql安装
 
+```bash
+# 拉去最新镜像
+docker pull mysql
+# 启动
+docker run -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysql
+# 创建挂载目录
+mkdir -p /usr/local/mysql/conf
+mkdir -p /usr/local/mysql/data
+mkdir -p /usr/local/mysql/logs
+# 挂载目录后启动
+docker run -d -p 3306:3306 --name mysql -v /usr/local/mysql/conf/my.cnf:/etc/mysql/my.cnf -v /usr/local/mysql/logs:/logs -v /usr/local/mysql/data/mysql:/var/lib/mysql  -e MYSQL_ROOT_PASSWORD=123456 mysql
+```
 
 ### 目录挂载
 
