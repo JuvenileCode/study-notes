@@ -26,7 +26,7 @@ curl http://myip.ipip.net/
    ```shell
    1. brew --version或者brew -v 显示brew版本信息
    2. brew install <formula> 安装指定软件
-   3. brew unistall <formula 卸载指定软件
+   3. brew uninstall <formula 卸载指定软件
    4. brew list 显示所有的已安装的软件
    5. brew search text 搜索本地远程仓库的软件，已安装会显示绿色的勾
    6. brew search /text/ 使用正则表达式搜软件
@@ -59,8 +59,8 @@ curl http://myip.ipip.net/
    1. brew cleanup -n 列出需要清理的内容
    2. brew cleanup <formula> 清理指定的软件过时包
    3. brew cleanup 清理所有的过时软件
-   4. brew unistall <formula> 卸载指定软件
-   5. brew unistall <fromula> --force 彻底卸载指定软件，包括旧版本
+   4. brew uninstall <formula> 卸载指定软件
+   5. brew uninstall <fromula> --force 彻底卸载指定软件，包括旧版本
    ```
 
    
