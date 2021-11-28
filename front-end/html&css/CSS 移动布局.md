@@ -1,4 +1,4 @@
-## CSS 移动布局
+CSS 移动布局
 
 ### 理想视口 - meta标签
 
@@ -96,4 +96,34 @@ flex 定义子项目分配剩余空间
 align-self 子项自己在侧轴的排列方式
 order 子项排列的前后顺序
 ```
+
+### rem布局
+
+#### rem基础
+
+**rem(root em)是一个相对单位，类似于em(em相对于父元素字体大小)；不同的是rem的基准是相对html的元素大小。**
+
+```css
+/* 例：根元素(html)设置font-size=12px，非根元素width:2rem，则px = 24px */
+html {
+  font-size: 14px;
+}
+div{
+  font-size: 12px;
+}
+p{
+  /* em 相对于父元素的字体大小 10*12=120px*/
+  width: 10em;
+  height: 10em;
+  /* rem相对于 html 元素 字体大小 12*14=168px*/
+  width: 12rem;
+  height: 12rem;
+}
+```
+
+#### 媒体查询
+
+**媒体查询（Media Query）是CSS3的新语法**
+
+使用@media可以针对不同的媒体类型（屏幕尺寸）定义不同的样式
 
