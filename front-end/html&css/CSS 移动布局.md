@@ -121,9 +121,119 @@ p{
 }
 ```
 
-#### 媒体查询
+#### rem计算
+
+1. **页面中元素PX值 = html的fontasize * 元素的rem值**
+
+```
+1.html > font-size:20px
+2.div > width:0.5rem
+得 = 20 *0.5 = 10px
+```
+
+2. **元素的rem值 = 页面元素的px值 / html的fontsize**
+
+#### 媒体查询
 
 **媒体查询（Media Query）是CSS3的新语法**
 
 使用@media可以针对不同的媒体类型（屏幕尺寸）定义不同的样式
+
+```css
+<style>
+@media screen and (max-width: 520px) {
+  body {
+    background-color: #8c969b;
+
+    html {
+      font-size: 50px;
+    }
+  }
+
+  @media screen and (min-width: 520px) and (max-width: 720px) {
+    body {
+      background-color: #96cdb3;
+    }
+
+    html {
+      font-size: 100px;
+    }
+  }
+
+  @media screen and (min-width: 720px) {
+    body {
+      background-color: #996b75;
+    }
+
+    html {
+      font-size: 150px;
+    }
+  }
+
+  .top {
+    height: 1rem;
+    font-size: .5rem;
+    background-color: green;
+    color: #fff;
+  }
+</style>
+<body>
+<div class="top">Shopping Car</div>
+</body>
+```
+
+**引入资源**
+
+当样式比较繁多的时候，我们可以针对不同的媒体查询使用不同的css样式文件
+
+```html
+<!--    当屏幕大于520px,调用某个css样式文件-->
+<!--    <link rel="stylesheet" href="xx.css" media="screen and (min-width:520px">-->
+```
+
+### less基础
+
+Less（Leaner Style Sheets的缩写）css的扩展语音，也是css的预处理器
+
+#### Less变量
+
+变量命名规范
+
+- `@变量名:值;` 必须有@为前缀，不能包含特殊字符，不能以数字开头，大小写敏感
+
+```less
+// 定义一个变量
+@color: red;
+body{
+  background-color: @color
+}
+```
+
+#### Less编译
+
+Easy Less插件能把less文件编译成css文件
+
+#### Less嵌套
+
+```less
+.header{
+  width: 200px;
+  //1.less嵌套 子元素样式直接写到父元素里面
+  a { 
+    color:red;
+    //2.a元素自身伪类选择器(加&表示当前元素)
+    &:hover{ color:blue;}
+  }
+}
+```
+
+#### Less运算
+
+任何数字、颜色或者变量都可以参与运算。Less提供+、-、*、/运算。
+
+```less
+@border: 5px + 5;
+// 两个都有单位的参数参与运算，最后结果以第一个单位为准
+img { width: 82 /50rem;}
+```
 
