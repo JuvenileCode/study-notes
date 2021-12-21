@@ -237,3 +237,15 @@ Easy Less插件能把less文件编译成css文件
 img { width: 82 /50rem;}
 ```
 
+### rem适配方案
+
+#### 方案一
+
+- less
+- 媒体查询
+- rem
+
+#### 方案二
+
+- flexible.js (适配库)
+- rem
