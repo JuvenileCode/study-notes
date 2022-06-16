@@ -36,6 +36,28 @@ man 是 manual 的简写(`man [option] <command>`)，与 help 命令和 --help �
 >
 > q 退出
 
+### 端口开放
+
+#### 查看端口号是否开放
+
+```bash
+# 查询已开放的端口号 netstat  -ntulp | grep
+netstat  -ntulp | grep 7473 
+# 查询指定端口号是否开启
+firewall-cmd --query-port=7473/tcp
+```
+
+#### 开放端口号
+
+```bash
+# 添加指定需要开放的端口
+firewall-cmd --add-port=7473/tcp --permanent
+# 重载入添加的端口
+firewall-cmd --reload
+# 移除指定端口
+firewall-cmd --permanent --remove-port=7473/tcp
+```
+
 ### 基础命令
 
 [参考](https://www.cnblogs.com/peida/tag/%E6%AF%8F%E6%97%A5%E4%B8%80linux%E5%91%BD%E4%BB%A4/default.html?page=3)
